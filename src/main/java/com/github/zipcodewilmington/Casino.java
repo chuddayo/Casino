@@ -1,7 +1,7 @@
 package com.github.zipcodewilmington;
 
-import com.github.zipcodewilmington.casino.CasinoAccount;
-import com.github.zipcodewilmington.casino.CasinoAccountManager;
+import com.github.zipcodewilmington.casino.Account;
+import com.github.zipcodewilmington.casino.AccountManager;
 import com.github.zipcodewilmington.casino.GameInterface;
 import com.github.zipcodewilmington.casino.PlayerInterface;
 import com.github.zipcodewilmington.casino.games.numberguess.NumberGuessGame;
@@ -20,14 +20,14 @@ public class Casino implements Runnable {
     @Override
     public void run() {
         String arcadeDashBoardInput;
-        CasinoAccountManager casinoAccountManager = new CasinoAccountManager();
+        AccountManager accountManager = new AccountManager();
         do {
             arcadeDashBoardInput = getArcadeDashboardInput();
             if ("select-game".equals(arcadeDashBoardInput)) {
                 String accountName = console.getStringInput("Enter your account name:");
                 String accountPassword = console.getStringInput("Enter your account password:");
-                CasinoAccount casinoAccount = casinoAccountManager.getAccount(accountName, accountPassword);
-                boolean isValidLogin = casinoAccount != null;
+                Account account = accountManager.getAccount(accountName, accountPassword);
+                boolean isValidLogin = account != null;
                 if (isValidLogin) {
                     String gameSelectionInput = getGameSelectionInput().toUpperCase();
                     if (gameSelectionInput.equals("SLOTS")) {
@@ -48,8 +48,8 @@ public class Casino implements Runnable {
                 console.println("Welcome to the account-creation screen.");
                 String accountName = console.getStringInput("Enter your account name:");
                 String accountPassword = console.getStringInput("Enter your account password:");
-                CasinoAccount newAccount = casinoAccountManager.createAccount(accountName, accountPassword);
-                casinoAccountManager.registerAccount(newAccount);
+                Account newAccount = accountManager.createAccount(accountName, accountPassword);
+                accountManager.registerAccount(newAccount);
             }
         } while (!"logout".equals(arcadeDashBoardInput));
     }
