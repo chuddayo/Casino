@@ -6,41 +6,33 @@ package com.github.zipcodewilmington.casino;
  * The `ArcadeAccount` is used to log into the system to select a `Game` to play.
  */
 public class Account {
-    private String name;
-    private String password;
-    private double funds;
+    private final String userName;
+    private final String password;
+    private double balance;
 
-    public Account(String name, String password, double fund) {
-        this.name = name;
+    public Account(String userName, String password, double balance) {
+        this.userName = userName;
         this.password = password;
-        this.funds = fund;
+        this.balance = balance;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public String getUserName() {
+        return userName;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public double getBalance() {
+        return balance;
     }
 
-    public double getFunds() {
-        return funds;
-    }
-
-    public void setFunds(double funds) {
-        this.funds = funds;
+    public void setBalance(double funds) {
+        this.balance = funds;
     }
 
     public String toString() {
-        return this.name + "," + this.password + "," + String.format("%.2f", this.funds) + "\n";
+        return this.userName + "," + this.password + "," + String.format("%.2f", this.balance) + "\n";
     }
 }

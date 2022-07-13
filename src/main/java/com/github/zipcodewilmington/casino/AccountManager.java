@@ -12,10 +12,11 @@ public class AccountManager {
      * @return `ArcadeAccount` with specified `accountName` and `accountPassword`
      */
     public Account getAccount(String accountName, String accountPassword) {
-        String currentMethodName = new Object(){}.getClass().getEnclosingMethod().getName();
-        String currentClassName = getClass().getName();
-        String errorMessage = "Method with name [ %s ], defined in class with name [ %s ] has  not yet been implemented";
-        throw new RuntimeException(String.format(errorMessage, currentMethodName, currentClassName));
+//        String currentMethodName = new Object(){}.getClass().getEnclosingMethod().getName();
+//        String currentClassName = getClass().getName();
+//        String errorMessage = "Method with name [ %s ], defined in class with name [ %s ] has  not yet been implemented";
+//        throw new RuntimeException(String.format(errorMessage, currentMethodName, currentClassName));
+        return null;
     }
 
     /**
@@ -26,10 +27,11 @@ public class AccountManager {
      * @return new instance of `ArcadeAccount` with specified `accountName` and `accountPassword`
      */
     public Account createAccount(String accountName, String accountPassword) {
-        String currentMethodName = new Object(){}.getClass().getEnclosingMethod().getName();
-        String currentClassName = getClass().getName();
-        String errorMessage = "Method with name [ %s ], defined in class with name [ %s ] has  not yet been implemented";
-        throw new RuntimeException(String.format(errorMessage, currentMethodName, currentClassName));
+//        String currentMethodName = new Object(){}.getClass().getEnclosingMethod().getName();
+//        String currentClassName = getClass().getName();
+//        String errorMessage = "Method with name [ %s ], defined in class with name [ %s ] has  not yet been implemented";
+//        throw new RuntimeException(String.format(errorMessage, currentMethodName, currentClassName));
+        return null;
     }
 
     /**
@@ -38,9 +40,9 @@ public class AccountManager {
      * @param account the arcadeAccount to be added to `this.getArcadeAccountList()`
      */
     public void registerAccount(Account account) {
-        String currentMethodName = new Object(){}.getClass().getEnclosingMethod().getName();
-        String currentClassName = getClass().getName();
-        String errorMessage = "Method with name [ %s ], defined in class with name [ %s ] has  not yet been implemented";
-        throw new RuntimeException(String.format(errorMessage, currentMethodName, currentClassName));
+//        String currentMethodName = new Object(){}.getClass().getEnclosingMethod().getName();
+//        String currentClassName = getClass().getName();
+//        String errorMessage = "Method with name [ %s ], defined in class with name [ %s ] has  not yet been implemented";
+//        throw new RuntimeException(String.format(errorMessage, currentMethodName, currentClassName));
     }
 }
