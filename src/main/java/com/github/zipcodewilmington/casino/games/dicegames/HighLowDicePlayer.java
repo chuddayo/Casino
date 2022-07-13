@@ -1,4 +1,4 @@
 package com.github.zipcodewilmington.casino.games.dicegames;
 
-public class HighLowDiceGame {
+public class HighLowDicePlayer {
 }
