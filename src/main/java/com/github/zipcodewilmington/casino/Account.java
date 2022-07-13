@@ -8,9 +8,9 @@ package com.github.zipcodewilmington.casino;
 public class Account {
     private final String userName;
     private final String password;
-    private double balance;
+    private int balance;
 
-    public Account(String userName, String password, double balance) {
+    public Account(String userName, String password, int balance) {
         this.userName = userName;
         this.password = password;
         this.balance = balance;
@@ -24,12 +24,12 @@ public class Account {
         return password;
     }
 
-    public double getBalance() {
+    public int getBalance() {
         return balance;
     }
 
-    public void setBalance(double funds) {
-        this.balance = funds;
+    public void setBalance(int balance) {
+        this.balance = balance;
     }
 
     public String toString() {
