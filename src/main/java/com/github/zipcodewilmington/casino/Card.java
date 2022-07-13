@@ -1,14 +1,10 @@
 package com.github.zipcodewilmington.casino;
 
 public class Card implements Comparable<Card> {
-    private Suit suit;
-    private CardValue cardValue;
+    private final Suit suit;
+    private final CardValue cardValue;
     public Card(CardValue cardValue, Suit suit) {
         this.cardValue = cardValue;
-        this.suit = suit;
-    }
-
-    public void setSuit(Suit suit) {
         this.suit = suit;
     }
 
@@ -16,25 +12,17 @@ public class Card implements Comparable<Card> {
         return cardValue;
     }
 
-    public void setCardValue(CardValue cardValue) {
-        this.cardValue = cardValue;
-    }
-
-    public int getRank() {
-        return 0;
-    }
-
-    public String getSuit() {
-        return null;
+    public Suit getSuit() {
+        return suit;
     }
 
     @Override
     public String toString() {
-        return null;
+        return getCardValue() + " of " + getSuit();
     }
 
     @Override
     public int compareTo(Card card) {
-        return 0;
+        return this.getCardValue().compareTo(card.getCardValue());
     }
 }
