@@ -3,7 +3,6 @@ package com.github.zipcodewilmington;
 import com.github.zipcodewilmington.casino.Account;
 import com.github.zipcodewilmington.casino.AccountManager;
 import com.github.zipcodewilmington.casino.GameInterface;
-import com.github.zipcodewilmington.casino.PlayerInterface;
 import com.github.zipcodewilmington.casino.games.slots.SlotsGame;
 import com.github.zipcodewilmington.casino.games.slots.SlotsPlayer;
 import com.github.zipcodewilmington.utils.AnsiColor;
@@ -85,8 +84,8 @@ public class Casino implements Runnable {
 
     private void play(Object gameObject, Object playerObject) {
         GameInterface game = (GameInterface)gameObject;
-//        PlayerInterface player = (PlayerInterface)playerObject;
-//        game.add(player);
-//        game.run();
+        //PlayerInterface player = (PlayerInterface)playerObject;
+        //game.add(player);
+        //game.run();
     }
 }
