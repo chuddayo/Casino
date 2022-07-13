@@ -20,6 +20,10 @@ public class Deck {
         this.shuffle();
     }
 
+    public Stack<Card> getDeck() {
+        return deck;
+    }
+
     public void shuffle() {
         Collections.shuffle(deck);
     }
@@ -30,5 +34,13 @@ public class Deck {
 
     public void discard(Card card) {
         deck.add(card);
+    }
+
+    public int size() {
+        return deck.size();
+    }
+
+    public boolean contains(Card card) {
+        return deck.contains(card);
     }
 }
