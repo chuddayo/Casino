@@ -4,12 +4,12 @@ import com.github.zipcodewilmington.casino.*;
 
 import java.util.List;
 
-public class ThreeCardPokerPlayer {
+public class ThreeCardPokerPlayer extends Player {
     private Account account;
     private List<Card> playerHand;
 
     public ThreeCardPokerPlayer(Account account) {
-        this.account = account;
+        super(account);
     }
 
     public int playOrFold() {
