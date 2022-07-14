@@ -1,6 +1,89 @@
 package com.github.zipcodewilmington.casino.games.dicegames;
 
-public class HighLowDice {
+import com.github.zipcodewilmington.casino.GamblingGameInterface;
+import com.github.zipcodewilmington.casino.Player;
 
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Scanner;
 
+public class HighLowDice implements GamblingGameInterface {
+
+    private HashSet<HighLowDicePlayer> players;
+    private final Scanner scan = new Scanner(System.in);
+    private final Dice dice = new Dice(2);
+    private String winningBet;
+
+    public HighLowDice(HashSet<HighLowDicePlayer> players) {
+        this.players = players;
+    }
+
+    @Override
+    public void beginGame() {
+        printInstructions();
+        for (HighLowDicePlayer player : players) {
+            String username = player.getAccount().getUsername();
+            int betAmount = printAndScanInt("Player " + username + " please input the number of tokens you would like to wager");
+            player.placeBet(betAmount);
+            scan.nextLine();
+            String bet = printAndScanStr("Player " + username + " please place your bet (high, low or seven)").toLowerCase();
+            player.bet(bet);
+            while (player.getBetAmount() == -1 || player.getBet() == "invalid") {
+                if (player.getBetAmount() == -1) {
+                    betAmount = printAndScanInt("Invalid bet amount! Player " + username + " please input the number of tokens you would like to wager");
+                    player.placeBet(betAmount);
+                    scan.nextLine();
+                }
+                if (player.getBet() == "invalid") {
+                    bet = printAndScanStr("Invalid bet! Player " + username + " please place your bet (high, low or seven)").toLowerCase();
+                    player.bet(bet);
+                }
+            }
+        }
+        getWinningBet();
+        payout();
+    }
+
+    public void getWinningBet() {
+        int roll = this.dice.tossAndSum();
+        System.out.println("The dice roll is: " + roll + "!");
+        if (roll < 7) this.winningBet = "low";
+        else if (roll > 7) this.winningBet = "high";
+        else this.winningBet = "seven";
+        System.out.println("The winning bet is: " + this.winningBet + "!");
+    }
+
+    @Override
+    public void payout() {
+        for (HighLowDicePlayer player : players) {
+            if (player.getBet().equals(this.winningBet)) {
+                System.out.println("Congratulations " + player.getAccount().getUsername() + " on winning " + player.getBetAmount() + " tokens!");
+                player.getAccount().addBalance(player.getBetAmount());
+            } else {
+                System.out.println("Sorry " + player.getAccount().getUsername() + " unfortunately you lost " + player.getBetAmount() + " tokens! :(");
+                player.getAccount().deductBalance(player.getBetAmount());
+            }
+        }
+    }
+
+    @Override
+    public String printInstructions() {
+        return "Welcome to high low game! \n" +
+                "Blah blah";
+    }
+
+    @Override
+    public Player decideWinner() {
+        return null;
+    }
+
+    public String printAndScanStr(String s) {
+        System.out.print(s + ": ");
+        return scan.nextLine();
+    }
+
+    public int printAndScanInt(String s) {
+        System.out.print(s + ": ");
+        return scan.nextInt();
+    }
 }
