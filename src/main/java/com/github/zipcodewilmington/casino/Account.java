@@ -6,18 +6,18 @@ package com.github.zipcodewilmington.casino;
  * The `ArcadeAccount` is used to log into the system to select a `Game` to play.
  */
 public class Account {
-    private final String userName;
+    private final String username;
     private final String password;
     private int balance;
 
-    public Account(String userName, String password, int balance) {
-        this.userName = userName;
+    public Account(String username, String password, int balance) {
+        this.username = username;
         this.password = password;
         this.balance = balance;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
     public String getPassword() {
@@ -33,6 +33,6 @@ public class Account {
     }
 
     public String toString() {
-        return this.userName + "," + this.password + "," + String.format("%.2f", this.balance) + "\n";
+        return this.username + "," + this.password + "," + String.format("%.2f", this.balance) + "\n";
     }
 }
