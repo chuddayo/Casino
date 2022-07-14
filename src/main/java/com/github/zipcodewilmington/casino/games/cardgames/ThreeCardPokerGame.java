@@ -2,16 +2,16 @@ package com.github.zipcodewilmington.casino.games.cardgames;
 
 import com.github.zipcodewilmington.casino.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class ThreeCardPokerGame implements MultiplayerGamblingGame {
 
     private Deck deck;
     private HashSet<ThreeCardPokerPlayer> playerSet;
     private List<Card> dealerHand;
+    private final int ante = 5;
+    private final int betAmt = 20;
+    public Scanner scan;
 
     public ThreeCardPokerGame(HashSet<ThreeCardPokerPlayer> playerSet) {
         this.deck = new Deck();
@@ -19,12 +19,15 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
         this.dealerHand = new ArrayList<>();
     }
 
+    public HashSet<ThreeCardPokerPlayer> getPlayerSet() {
+        return playerSet;
+    }
+
     public List<Card> dealHand() {
         List<Card> threeCardHand = new ArrayList<>();
         threeCardHand.add(deck.dealTop());
         threeCardHand.add(deck.dealTop());
         threeCardHand.add(deck.dealTop());
-        //dealerHand = threeCardHand;
         return threeCardHand;
     }
 
@@ -45,36 +48,37 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
 
     @Override
     public void beginGame() {
-        int playerInput;
-        Scanner in = new Scanner(System.in);
         System.out.println(printInstructions());
         while (true) {
-            // place ante or return to lobby
-            //    for each player
-            //    remove from playerSet if they leave game
-//            for (ThreeCardPokerPlayer player : playerSet) {
-//                System.out.println(player.getPlayerName() +
-//                        ": (1) Place Ante  (2) Return to Lobby");
-//                playerInput = in.nextInt();
-//                if (playerInput == 1) {
-//                    player...
-//                } else if (playerInput == 2) {
-//                    playerSet.remove(player);
-//                }
-//            }
-            //
+            /*
+                for each player:
+                    place ante or return to lobby
+                    remove from playerSet if they leave game
+             */
+            for (ThreeCardPokerPlayer player : playerSet) {
+                int playerInput = getNumber(player.getPlayerName() + ": (1) Place Ante  (2) Return to Lobby");
+                if (playerInput == 1) {
+                    //player.getPlayerAccount().deductBalance(ante);
+                } else if (playerInput == 2) {
+                    playerSet.remove(player);
+                }
+            }
+            if (playerSet.isEmpty()) break; // exit game
 
+
+            // deal the dealer in and all players remaining who have anted
             dealerHand = dealHand();
             for (ThreeCardPokerPlayer player : playerSet) {
                 player.setPlayerHand(dealHand());
             }
+
             // ask for bet
             //    flag players as folded if they don't place further bet
+
             System.out.println(flipAllCards());
             // determine winner for each player and add to balance with payout()
             // for each winning 3cpokerplayer payout(player.getAccount(), $$)
             //     display payouts
-            break;
         }
     }
 
@@ -96,13 +100,18 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
         account.setBalance(account.getBalance() + payoutAmount);
     }
 
-    @Override
-    public void payout() {
-
-    }
-
-    @Override
-    public Player decideWinner() {
-        return null;
+    public int getNumber(String message) {
+        scan = new Scanner(System.in);
+        while (true) {
+            System.out.print(message);
+            try {
+                int input = scan.nextInt();
+                if (input < 0) continue;
+                return input;
+            }
+            catch (InputMismatchException e) {
+                System.out.println("\"" + scan.next() + "\" isn't a number!");
+            }
+        }
     }
 }

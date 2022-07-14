@@ -2,12 +2,13 @@ package com.github.zipcodewilmington.casino.games.dicegames;
 
 import com.github.zipcodewilmington.casino.Account;
 import com.github.zipcodewilmington.casino.GamblingGameInterface;
+import com.github.zipcodewilmington.casino.MultiplayerGamblingGame;
 import com.github.zipcodewilmington.casino.Player;
 
 import java.util.HashSet;
 import java.util.Scanner;
 
-public class HighLowDice implements GamblingGameInterface {
+public class HighLowDice implements MultiplayerGamblingGame {
 
     private HashSet<HighLowDicePlayer> players;
     private final Scanner scan = new Scanner(System.in);
@@ -41,7 +42,7 @@ public class HighLowDice implements GamblingGameInterface {
             }
         }
         getWinningBet();
-        payout();
+        //payout();
     }
 
     public void getWinningBet() {
@@ -54,7 +55,7 @@ public class HighLowDice implements GamblingGameInterface {
     }
 
     @Override
-    public void payout() {
+    public void payout(Account account, int payoutAmount) {
         for (HighLowDicePlayer player : players) {
             if (player.getBet().equals(this.winningBet)) {
                 System.out.println("Congratulations " + player.getAccount().getUserName() + " on winning " + player.getBetAmount() + " tokens!");
@@ -83,12 +84,7 @@ public class HighLowDice implements GamblingGameInterface {
     }
 
     @Override
-    public Player decideWinner() {
+    public HashSet<Player> decideWinner(HashSet<Player> players) {
         return null;
-    }
-
-    @Override
-    public void payout(Account account, int payoutAmount) {
-
     }
 }
