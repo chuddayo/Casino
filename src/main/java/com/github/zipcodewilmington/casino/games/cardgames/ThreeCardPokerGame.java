@@ -27,7 +27,7 @@ public class ThreeCardPokerGame implements GameInterface {
         return threeCardHand;
     }
 
-    public StringBuilder flipCards() {
+    public StringBuilder flipAllCards() {
         StringBuilder allCards = new StringBuilder(" * * Dealer's Hand * *\n");
         for(Card card : dealerHand) {
             allCards.append(card).append("\n");
@@ -45,18 +45,25 @@ public class ThreeCardPokerGame implements GameInterface {
     @Override
     public void beginGame() {
         System.out.println(printInstructions());
+        // place ante or return to game
+        //    for each player
+        //    remove from playerSet if they leave game
         dealerHand = dealHand();
         for(ThreeCardPokerPlayer player : playerSet) {
             player.setPlayerHand(dealHand());
         }
-        System.out.println(flipCards());
+        // ask for bet
+        //    flag players as folded if they don't place further bet
+        System.out.println(flipAllCards());
+        // determine winner for each player and add to balance with payout()
+        //     display payouts
     }
 
     @Override
     public String printInstructions() {
-        return "-------------------------------\n" +
-               "--Welcome to Three Card Poker--\n" +
-               "-------------------------------\n" +
+        return "----------------------------------\n" +
+               "---Welcome to Three Card Poker----\n" +
+               "----------------------------------\n" +
                "I don't know the rules, good luck.";
     }
 

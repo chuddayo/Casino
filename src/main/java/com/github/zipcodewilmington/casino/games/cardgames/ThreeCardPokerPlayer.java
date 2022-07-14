@@ -11,14 +11,13 @@ public class ThreeCardPokerPlayer extends Player implements GamblingPlayer{
         super(account);
     }
 
-    public List<Card> getPlayerHand() {
-        return playerHand;
-    }
     @Override
     public String getPlayerName() {
         return account.getUserName();
     }
-
+    public List<Card> getPlayerHand() {
+        return playerHand;
+    }
     public void setPlayerHand(List<Card> playerHand) {
         this.playerHand = playerHand;
     }
