@@ -10,4 +10,9 @@ public abstract class Player {
     public Account getAccount() {
         return this.account;
     }
+
+    public abstract String getPlayerName();
+
+    public abstract Account getPlayerAccount();
+
 }

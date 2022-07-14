@@ -24,5 +24,4 @@ public class Dice {
     public int getValue() {
         return this.value;
     }
-
 }

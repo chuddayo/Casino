@@ -1,10 +1,10 @@
 package com.github.zipcodewilmington.casino.games.dicegames;
 
+import com.github.zipcodewilmington.casino.Account;
 import com.github.zipcodewilmington.casino.GamblingGameInterface;
 import com.github.zipcodewilmington.casino.Player;
 
 import java.util.HashSet;
-import java.util.Locale;
 import java.util.Scanner;
 
 public class HighLowDice implements GamblingGameInterface {
@@ -22,7 +22,7 @@ public class HighLowDice implements GamblingGameInterface {
     public void beginGame() {
         printInstructions();
         for (HighLowDicePlayer player : players) {
-            String username = player.getAccount().getUsername();
+            String username = player.getAccount().getUserName();
             int betAmount = printAndScanInt("Player " + username + " please input the number of tokens you would like to wager");
             player.placeBet(betAmount);
             scan.nextLine();
@@ -57,10 +57,10 @@ public class HighLowDice implements GamblingGameInterface {
     public void payout() {
         for (HighLowDicePlayer player : players) {
             if (player.getBet().equals(this.winningBet)) {
-                System.out.println("Congratulations " + player.getAccount().getUsername() + " on winning " + player.getBetAmount() + " tokens!");
+                System.out.println("Congratulations " + player.getAccount().getUserName() + " on winning " + player.getBetAmount() + " tokens!");
                 player.getAccount().addBalance(player.getBetAmount());
             } else {
-                System.out.println("Sorry " + player.getAccount().getUsername() + " unfortunately you lost " + player.getBetAmount() + " tokens! :(");
+                System.out.println("Sorry " + player.getAccount().getUserName() + " unfortunately you lost " + player.getBetAmount() + " tokens! :(");
                 player.getAccount().deductBalance(player.getBetAmount());
             }
         }
@@ -72,11 +72,6 @@ public class HighLowDice implements GamblingGameInterface {
                 "Blah blah";
     }
 
-    @Override
-    public Player decideWinner() {
-        return null;
-    }
-
     public String printAndScanStr(String s) {
         System.out.print(s + ": ");
         return scan.nextLine();
@@ -85,5 +80,15 @@ public class HighLowDice implements GamblingGameInterface {
     public int printAndScanInt(String s) {
         System.out.print(s + ": ");
         return scan.nextInt();
+    }
+
+    @Override
+    public Player decideWinner() {
+        return null;
+    }
+
+    @Override
+    public void payout(Account account, int payoutAmount) {
+
     }
 }

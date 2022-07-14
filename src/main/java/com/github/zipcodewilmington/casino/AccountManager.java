@@ -19,7 +19,7 @@ public class AccountManager {
         while ((line = reader.readLine()) != null) {
             String[] acctData = line.split(",");
             Account acct = new Account(acctData[0], acctData[1], Integer.parseInt(acctData[2]));
-            this.accounts.put(acct.getUsername(), acct);
+            this.accounts.put(acct.getUserName(), acct);
         }
     }
 
@@ -39,6 +39,10 @@ public class AccountManager {
     }
 
     public void registerAccount(Account account) {
+
+    }
+
+    public void updateAccounts() throws IOException {
 
     }
 }

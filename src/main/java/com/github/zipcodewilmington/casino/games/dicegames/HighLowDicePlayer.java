@@ -13,6 +13,16 @@ public class HighLowDicePlayer extends Player implements GamblingPlayer {
     }
 
     @Override
+    public String getPlayerName() {
+        return null;
+    }
+
+    @Override
+    public Account getPlayerAccount() {
+        return null;
+    }
+
+    @Override
     public void placeBet(int amount) {
         if (this.account.checkBalance(amount)) {
             this.betAmount = amount;
