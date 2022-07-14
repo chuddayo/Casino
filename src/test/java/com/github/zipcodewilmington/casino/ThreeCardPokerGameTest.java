@@ -2,6 +2,14 @@ package com.github.zipcodewilmington.casino;
 
 import com.github.zipcodewilmington.casino.games.cardgames.ThreeCardPokerGame;
 import com.github.zipcodewilmington.casino.games.cardgames.ThreeCardPokerPlayer;
+
+import org.junit.Test;
+import java.util.HashSet;
+
+public class ThreeCardPokerGameTest {
+    @Test
+    public void flipAllCardsTest() {
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -12,6 +20,7 @@ import java.util.List;
 public class ThreeCardPokerGameTest {
     @Test
     public void dealHandTest() {
+
         Account account1 = new Account("Kyle", "p", 5000);
         Account account2 = new Account("Thina", "q", 8000);
         ThreeCardPokerPlayer player1 = new ThreeCardPokerPlayer(account1);
@@ -20,6 +29,17 @@ public class ThreeCardPokerGameTest {
         playerSet.add(player1);
         playerSet.add(player2);
         ThreeCardPokerGame newGame = new ThreeCardPokerGame(playerSet);
+
+
+        newGame.beginGame();
+    }
+
+    @Test
+    public void testAccountGetName() {
+        Account account2 = new Account("Eddie", "q", 8000);
+        ThreeCardPokerPlayer player1 = new ThreeCardPokerPlayer(account2);
+        System.out.println(player1.getPlayerName());
+
         Suit hearts = Suit.HEARTS;
         CardValue king = CardValue.KING;
         Card card1 = new Card(king, hearts);
@@ -49,5 +69,6 @@ public class ThreeCardPokerGameTest {
 
         //System.out.println(newGame.flipAllCards());
         newGame.beginGame();
+
     }
 }
