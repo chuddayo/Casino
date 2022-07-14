@@ -71,7 +71,7 @@ public class ThreeCardPokerGame implements GameInterface, GamblingGameInterface 
     }
 
     @Override
-    public Player decideWinner() {
+    public Player decideWinner(Player ...players) {
         return null;
     }
 
