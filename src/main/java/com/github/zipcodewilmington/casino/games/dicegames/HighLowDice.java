@@ -24,25 +24,25 @@ public class HighLowDice implements MultiplayerGamblingGame {
         printInstructions();
         for (HighLowDicePlayer player : players) {
             String username = player.getAccount().getUserName();
-            int betAmount = printAndScanInt("Player " + username + " please input the number of tokens you would like to wager");
+            int betAmount = printAndScanInt("Hi player " + username + "! Please enter the number of tokens you wish to wager");
             player.placeBet(betAmount);
             scan.nextLine();
-            String bet = printAndScanStr("Player " + username + " please place your bet (high, low or seven)").toLowerCase();
+            String bet = printAndScanStr("Hi player " + username + "! Please place your bet selection (high, low or seven)").toLowerCase();
             player.bet(bet);
             while (player.getBetAmount() == -1 || player.getBet() == "invalid") {
                 if (player.getBetAmount() == -1) {
-                    betAmount = printAndScanInt("Invalid bet amount! Player " + username + " please input the number of tokens you would like to wager");
+                    betAmount = printAndScanInt("Invalid bet amount! Sorry player " + username + ", please re-input the number of tokens you would like to wager");
                     player.placeBet(betAmount);
                     scan.nextLine();
                 }
                 if (player.getBet() == "invalid") {
-                    bet = printAndScanStr("Invalid bet! Player " + username + " please place your bet (high, low or seven)").toLowerCase();
+                    bet = printAndScanStr("Invalid bet selection! Sorry player " + username + ", please re-place your bet selection (high, low or seven)").toLowerCase();
                     player.bet(bet);
                 }
             }
         }
         getWinningBet();
-        //payout();
+        payout();
     }
 
     public void getWinningBet() {
@@ -54,8 +54,7 @@ public class HighLowDice implements MultiplayerGamblingGame {
         System.out.println("The winning bet is: " + this.winningBet + "!");
     }
 
-    @Override
-    public void payout(Account account, int payoutAmount) {
+    public void payout() {
         for (HighLowDicePlayer player : players) {
             if (player.getBet().equals(this.winningBet)) {
                 System.out.println("Congratulations " + player.getAccount().getUserName() + " on winning " + player.getBetAmount() + " tokens!");
@@ -69,8 +68,18 @@ public class HighLowDice implements MultiplayerGamblingGame {
 
     @Override
     public String printInstructions() {
-        return "Welcome to high low game! \n" +
-                "Blah blah";
+        return  "============Welcome to the high low dice game!============\n" +
+                "  ____\n" +
+                " /\\' .\\    _____\n" +
+                "/: \\___\\  / .  /\\\n" +
+                "\\' / . / /____/..\\\n" +
+                " \\/___/  \\'  '\\  /\n" +
+                "          \\'__'\\/" +
+                "========================= Rules: =========================\n" +
+                "1. Place your bets on high, low or seven\n" +
+                "2. High -- sum of the dice is 8, 9, 10, 11 or 12\n" +
+                "3. Seven -- the outcome is 7\n" +
+                "4. Low -- sum of the dice is 1, 2, 3, 4, 5, or 6";
     }
 
     public String printAndScanStr(String s) {
@@ -86,5 +95,9 @@ public class HighLowDice implements MultiplayerGamblingGame {
     @Override
     public HashSet<Player> decideWinner(HashSet<Player> players) {
         return null;
+    }
+
+    @Override
+    public void payout(Account account, int payoutAmount) {
     }
 }
