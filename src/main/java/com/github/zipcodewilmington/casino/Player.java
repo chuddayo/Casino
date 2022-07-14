@@ -8,4 +8,6 @@ public abstract class Player {
     }
 
     public abstract String getPlayerName();
+
+    public abstract Account getPlayerAccount();
 }

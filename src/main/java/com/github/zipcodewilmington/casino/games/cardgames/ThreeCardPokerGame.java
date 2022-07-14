@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-public class ThreeCardPokerGame implements GameInterface {
+public class ThreeCardPokerGame implements GameInterface, GamblingGameInterface {
 
     private Deck deck;
     private HashSet<ThreeCardPokerPlayer> playerSet;
@@ -45,18 +45,21 @@ public class ThreeCardPokerGame implements GameInterface {
     @Override
     public void beginGame() {
         System.out.println(printInstructions());
-        // place ante or return to game
-        //    for each player
-        //    remove from playerSet if they leave game
-        dealerHand = dealHand();
-        for(ThreeCardPokerPlayer player : playerSet) {
-            player.setPlayerHand(dealHand());
+        while (true) {// place ante or return to game
+            //    for each player
+            //    remove from playerSet if they leave game
+            dealerHand = dealHand();
+            for (ThreeCardPokerPlayer player : playerSet) {
+                player.setPlayerHand(dealHand());
+            }
+            // ask for bet
+            //    flag players as folded if they don't place further bet
+            System.out.println(flipAllCards());
+            // determine winner for each player and add to balance with payout()
+            // for each winning 3cpokerplayer payout(player.getAccount(), $$)
+            //     display payouts
+            break;
         }
-        // ask for bet
-        //    flag players as folded if they don't place further bet
-        System.out.println(flipAllCards());
-        // determine winner for each player and add to balance with payout()
-        //     display payouts
     }
 
     @Override
@@ -70,5 +73,10 @@ public class ThreeCardPokerGame implements GameInterface {
     @Override
     public Player decideWinner() {
         return null;
+    }
+
+    @Override
+    public void payout(Account account, int payoutAmount) {
+        account.setBalance(account.getBalance() + payoutAmount);
     }
 }

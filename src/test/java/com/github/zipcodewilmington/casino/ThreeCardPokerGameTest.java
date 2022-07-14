@@ -7,7 +7,7 @@ import java.util.HashSet;
 
 public class ThreeCardPokerGameTest {
     @Test
-    public void flipCardsTest() {
+    public void flipAllCardsTest() {
         Account account1 = new Account("Kyle", "p", 5000);
         Account account2 = new Account("Thina", "q", 8000);
         ThreeCardPokerPlayer player1 = new ThreeCardPokerPlayer(account1);
