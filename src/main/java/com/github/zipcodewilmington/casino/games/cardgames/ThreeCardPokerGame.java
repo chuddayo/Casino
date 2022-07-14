@@ -5,8 +5,9 @@ import com.github.zipcodewilmington.casino.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Scanner;
 
-public class ThreeCardPokerGame implements GameInterface, GamblingGameInterface {
+public class ThreeCardPokerGame implements MultiplayerGamblingGame {
 
     private Deck deck;
     private HashSet<ThreeCardPokerPlayer> playerSet;
@@ -44,10 +45,25 @@ public class ThreeCardPokerGame implements GameInterface, GamblingGameInterface 
 
     @Override
     public void beginGame() {
+        int playerInput;
+        Scanner in = new Scanner(System.in);
         System.out.println(printInstructions());
-        while (true) {// place ante or return to game
+        while (true) {
+            // place ante or return to lobby
             //    for each player
             //    remove from playerSet if they leave game
+//            for (ThreeCardPokerPlayer player : playerSet) {
+//                System.out.println(player.getPlayerName() +
+//                        ": (1) Place Ante  (2) Return to Lobby");
+//                playerInput = in.nextInt();
+//                if (playerInput == 1) {
+//                    player...
+//                } else if (playerInput == 2) {
+//                    playerSet.remove(player);
+//                }
+//            }
+            //
+
             dealerHand = dealHand();
             for (ThreeCardPokerPlayer player : playerSet) {
                 player.setPlayerHand(dealHand());
@@ -71,7 +87,7 @@ public class ThreeCardPokerGame implements GameInterface, GamblingGameInterface 
     }
 
     @Override
-    public Player decideWinner(Player ...players) {
+    public HashSet<Player> decideWinner(HashSet<Player> players) {
         return null;
     }
 
