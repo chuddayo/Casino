@@ -46,8 +46,7 @@ public class ThreeCardPokerGameTest {
         playerSet.add(player1);
         playerSet.add(player2);
         ThreeCardPokerGame newGame = new ThreeCardPokerGame(playerSet);
-
-        //System.out.println(newGame.flipAllCards());
-        newGame.beginGame();
+        //newGame.beginGame();
+        System.out.println(newGame.flipAllCards());
     }
 }
