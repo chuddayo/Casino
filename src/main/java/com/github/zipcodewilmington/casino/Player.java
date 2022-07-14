@@ -7,7 +7,12 @@ public abstract class Player {
         this.account = account;
     }
 
+    public Account getAccount() {
+        return this.account;
+    }
+
     public abstract String getPlayerName();
 
     public abstract Account getPlayerAccount();
+
 }

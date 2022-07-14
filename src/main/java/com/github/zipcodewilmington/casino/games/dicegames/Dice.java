@@ -6,18 +6,22 @@ public class Dice {
 
     private int value;
     private Random rand;
+    private int numDice;
 
-    public Dice() {
+    public Dice(int numDice) {
         this.rand = new Random();
+        this.numDice = numDice;
     }
 
-    public int roll() {
-        this.value = rand.nextInt(7);
-        return getValue();
+    public int tossAndSum() {
+        this.value = 0;
+        for (int i = 0; i < this.numDice; i++) {
+            this.value += rand.nextInt(6) + 1;
+        }
+        return this.value;
     }
 
     public int getValue() {
         return this.value;
     }
-
 }
