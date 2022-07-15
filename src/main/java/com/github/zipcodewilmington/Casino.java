@@ -36,10 +36,7 @@ public class Casino {
 //                   }
                    //                    else if (gameSelectionInput.equals("BLACK JACK")) {
                    //                        play(new BlackJackGame(), new BlackJackPlayer());
-                   //                    } else if (gameSelectionInput.equals("THREE CARD POKER")){
-                   //                        play(new ThreeCardPokerGame(), new ThreeCardPokerPlayer());
                    if (gameSelectionInput.equals("HIGH LOW DICE")) {
-                       //play(new HighLowDice(), new HighLowDicePlayer());
                        String accountName = console.getStringInput("Enter your account name:");
                        String accountPassword = console.getStringInput("Enter your account password:");
                        HashSet<HighLowDicePlayer> dicePlayers = new HashSet<>();
@@ -49,6 +46,22 @@ public class Casino {
                            dicePlayers.add(dicePlayer);
                            HighLowDice diceGame = new HighLowDice(dicePlayers);
                            diceGame.beginGame();
+                           accountManager.updateAccounts();
+                       } else {
+                           // TODO - implement better exception handling
+                           String errorMessage = "No account found with name of [ %s ] and password of [ %s ]";
+                           throw new RuntimeException(String.format(errorMessage, accountPassword, accountName));
+                       }
+                   } else if (gameSelectionInput.equals("THREE CARD POKER")) {
+                       String accountName = console.getStringInput("Enter your account name:");
+                       String accountPassword = console.getStringInput("Enter your account password:");
+                       HashSet<ThreeCardPokerPlayer> threeCardPlayers = new HashSet<>();
+                       Account account = accountManager.getAccount(accountName, accountPassword);
+                       if (account != null) {
+                           ThreeCardPokerPlayer threeCardPokerPlayer = new ThreeCardPokerPlayer(account);
+                           threeCardPlayers.add(threeCardPokerPlayer);
+                           ThreeCardPokerGame threeCardPokerGame = new ThreeCardPokerGame(threeCardPlayers);
+                           threeCardPokerGame.beginGame();
                            accountManager.updateAccounts();
                        } else {
                            // TODO - implement better exception handling
