@@ -10,8 +10,6 @@ import java.util.HashSet;
 import java.util.Scanner;
 
 public class HighLowDice implements MultiplayerGamblingGame {
-
-    private final IOConsole console = new IOConsole(AnsiColor.BLUE);
     private HashSet<HighLowDicePlayer> players;
     private final Scanner scan = new Scanner(System.in);
     private final Dice dice = new Dice(2);
