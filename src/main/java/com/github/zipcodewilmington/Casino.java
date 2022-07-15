@@ -38,7 +38,7 @@ public class Casino {
                    //                        play(new BlackJackGame(), new BlackJackPlayer());
                    //                    } else if (gameSelectionInput.equals("THREE CARD POKER")){
                    //                        play(new ThreeCardPokerGame(), new ThreeCardPokerPlayer());
-                   if (gameSelectionInput.equals("HI LO DICE")) {
+                   if (gameSelectionInput.equals("HIGH LOW DICE")) {
                        //play(new HighLowDice(), new HighLowDicePlayer());
                        String accountName = console.getStringInput("Enter your account name:");
                        String accountPassword = console.getStringInput("Enter your account password:");
@@ -88,7 +88,7 @@ public class Casino {
 
     private String getGameSelectionInput() {
         return console.getStringInput("From here, you can select any of the following games:" +
-                "\n\t[ SLOTS ], [ THREE CARD POKER ], [ BLACK JACK ], [ ROULETTE ], [ HI LO DICE ], [ TIC TAC TOE ]");
+                "\n\t[ SLOTS ], [ THREE CARD POKER ], [ BLACK JACK ], [ ROULETTE ], [ HIGH LOW DICE ], [ TIC TAC TOE ]");
     }
 
     private void play(Object gameObject, Object playerObject) {
