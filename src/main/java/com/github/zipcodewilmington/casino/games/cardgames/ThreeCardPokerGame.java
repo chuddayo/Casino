@@ -108,15 +108,28 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
     }
 
     public HandRank determineHandRank(List<Card> hand) {
-        return null;
+        HandRank handRank;
+        hand = sortHand(hand);
+        // is it a straight?
+            // if yes, is it a straight flush? -> if yes, STRAIGHTFLUSH
+                // if no, STRAIGHT
+        // is it three of a kind? -> if yes, THREEOFAKIND
+        // is it a flush? -> if yes, FLUSH
+        // is it one pair? -> if yes
+        return HandRank.HIGHCARD;
+    }
+
+    public List<Card> sortHand(List<Card> hand) {
+        Comparator<Card> byCardValue = Card::compareTo;
+        hand.sort(byCardValue);
+        return hand;
     }
 
     @Override
     public String printInstructions() {
         return "----------------------------------\n" +
                "---Welcome to Three Card Poker----\n" +
-               "----------------------------------\n" +
-               "I don't know the rules, good luck.";
+               "----------------------------------\n";
     }
 
     @Override
