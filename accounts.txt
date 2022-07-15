@@ -1,0 +1,2 @@
+goose,omgimagoose,1010
+duck,omgimaduck,970

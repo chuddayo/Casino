@@ -11,7 +11,6 @@ public class AccountManager {
 
     private HashMap<String, Account> accounts;
     private final Path file = Paths.get("accounts.txt");
-
     public AccountManager() throws IOException {
         this.accounts = new HashMap<>();
         BufferedReader reader = Files.newBufferedReader(this.file);
