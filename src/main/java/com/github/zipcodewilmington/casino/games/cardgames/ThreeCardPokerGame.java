@@ -10,6 +10,7 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
     private Deck deck;
     private HashSet<ThreeCardPokerPlayer> playerSet;
     private List<Card> dealerHand;
+    private HandRank dealerHandRank;
     private final int ante = 5;
     private final int betAmt = 20;
 
@@ -60,11 +61,9 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
         // check
 
         while (true) {
-            /*
-                for each player:
+            /*  for each player:
                     place ante or return to lobby
-                    remove from playerSet if they leave game
-             */
+                    remove from playerSet if they leave game */
             for (ThreeCardPokerPlayer player : playerSet) {
                 int playerInput = console.getIntegerInput(": (1) Place Ante  (2) Return to Lobby");
                 if (playerInput == 1) {
@@ -84,14 +83,32 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
             // show each player their hand and ask for bet
             //    flag players as folded if they don't place further bet
 
-            System.out.println(flipAllCards());
+            // determine rank of all hands still in
+            dealerHandRank = determineHandRank(dealerHand);
+            for (ThreeCardPokerPlayer player : playerSet) {
+                player.setPlayerHandRank(determineHandRank(player.getPlayerHand()));
+            }
 
             // determine winner for each player and add to balance with payout()
+            HashSet<ThreeCardPokerPlayer> winners = decideWinners(playerSet);
+
             // for each winning 3cpokerplayer payout(player.getAccount(), $$)
+            for (ThreeCardPokerPlayer winner : winners) {
+                payout(winner.getAccount(), 10);
+            }
             //     display payouts
 
-            break;
+            System.out.println(flipAllCards()); // TODO more display based on hand results and payouts
         }
+    }
+
+    public HashSet<ThreeCardPokerPlayer> decideWinners(HashSet<ThreeCardPokerPlayer> potentialWinners) {
+        // compare each potentialWinner HandRank to the dealer HandRank
+        return potentialWinners;
+    }
+
+    public HandRank determineHandRank(List<Card> hand) {
+        return null;
     }
 
     @Override
@@ -112,5 +129,6 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
     @Override
     public void payout(Account account, int payoutAmount) {
         account.addBalance(payoutAmount);
+        System.out.println("Paid $" + payoutAmount + " to " + account.getUserName() + "'s account!");
     }
 }
