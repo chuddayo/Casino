@@ -3,9 +3,7 @@ package com.github.zipcodewilmington.casino.games.cardgames;
 import com.github.zipcodewilmington.casino.*;
 import com.github.zipcodewilmington.utils.AnsiColor;
 import com.github.zipcodewilmington.utils.IOConsole;
-
 import java.util.*;
-import java.util.Scanner;
 
 public class ThreeCardPokerGame implements MultiplayerGamblingGame {
     private final IOConsole console = new IOConsole(AnsiColor.BLUE);
@@ -58,17 +56,9 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
     public void beginGame() {
         System.out.println(printInstructions());
 
-        for (Player player : playerSet) {
-            if(player.getAccount().getBalance() < 20) {
-                System.out.println("Go Away");
-                playerSet.remove(player);
-            }
-        }
-
-
-
-
         // check to make sure # of players < 7
+        // check
+
         while (true) {
             /*
                 for each player:
@@ -85,20 +75,21 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
             }
             if (playerSet.isEmpty()) break; // exit game
 
-
             // deal the dealer in and all players remaining who have anted
             dealerHand = dealHand();
             for (ThreeCardPokerPlayer player : playerSet) {
                 player.setPlayerHand(dealHand());
             }
 
-            // ask for bet
+            // show each player their hand and ask for bet
             //    flag players as folded if they don't place further bet
 
             System.out.println(flipAllCards());
+
             // determine winner for each player and add to balance with payout()
             // for each winning 3cpokerplayer payout(player.getAccount(), $$)
             //     display payouts
+
             break;
         }
     }
@@ -114,7 +105,7 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
     @Override
     public HashSet<Player> decideWinner(HashSet<Player> players) {
         // if playerHand <= dealerHand, remove player from players
-        // prob need an enum for hand ranks
+        // prob need an enum for hand ranks?
         return null;
     }
 
