@@ -29,13 +29,10 @@ public class Casino {
         try {
             do {
                dashBoardInput = getDashboardInput();
+
                if ("select-game".equals(dashBoardInput)) {
                    String gameSelectionInput = getGameSelectionInput().toUpperCase();
-//                   if (gameSelectionInput.equals("SLOTS")) {
-//                       play(new SlotsGame(), new SlotsPlayer());
-//                   }
-                   //                    else if (gameSelectionInput.equals("BLACK JACK")) {
-                   //                        play(new BlackJackGame(), new BlackJackPlayer());
+
                    if (gameSelectionInput.equals("HIGH LOW DICE")) {
                        String accountName = console.getStringInput("Enter your account name:");
                        String accountPassword = console.getStringInput("Enter your account password:");
@@ -68,7 +65,25 @@ public class Casino {
                            String errorMessage = "No account found with name of [ %s ] and password of [ %s ]";
                            throw new RuntimeException(String.format(errorMessage, accountPassword, accountName));
                        }
+                   } else if (gameSelectionInput.equals("SLOTS")) {
+                       String accountName = console.getStringInput("Enter your account name:");
+                       String accountPassword = console.getStringInput("Enter your account password:");
+                       HashSet<ThreeCardPokerPlayer> threeCardPlayers = new HashSet<>();
+                       Account account = accountManager.getAccount(accountName, accountPassword);
+                       if (account != null) {
+                           ThreeCardPokerPlayer threeCardPokerPlayer = new ThreeCardPokerPlayer(account);
+                           threeCardPlayers.add(threeCardPokerPlayer);
+                           ThreeCardPokerGame threeCardPokerGame = new ThreeCardPokerGame(threeCardPlayers);
+                           threeCardPokerGame.beginGame();
+                           accountManager.updateAccounts();
+                       } else {
+                           // TODO - implement better exception handling
+                           String errorMessage = "No account found with name of [ %s ] and password of [ %s ]";
+                           throw new RuntimeException(String.format(errorMessage, accountPassword, accountName));
+                       }
                    }
+                   //                    else if (gameSelectionInput.equals("BLACK JACK")) {
+                   //                        play(new BlackJackGame(), new BlackJackPlayer());
                    //                    } else if (gameSelectionInput.equals("ROULETTE")){
                    //                        play (new RouletteGame(), new RoulettePlayer());
                    //                    } else if (gameSelectionInput.equals("TIC TAC TOE")){
