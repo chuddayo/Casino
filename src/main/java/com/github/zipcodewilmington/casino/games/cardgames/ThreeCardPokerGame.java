@@ -6,7 +6,7 @@ import com.github.zipcodewilmington.utils.IOConsole;
 import java.util.*;
 
 public class ThreeCardPokerGame implements MultiplayerGamblingGame {
-    private final IOConsole console = new IOConsole(AnsiColor.BLUE);
+    private final IOConsole console = new IOConsole(AnsiColor.YELLOW);
     private Deck deck;
     private HashSet<ThreeCardPokerPlayer> playerSet;
     private List<Card> dealerHand;
@@ -58,11 +58,11 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
     @Override
     public void beginGame() {
         System.out.println(printInstructions());
-
-        // check to make sure # of players < 7
-        // check
-
         while (true) {
+            if (playerSet.size() > 6) {
+                System.out.println("Too many players, returning to lobby.");
+                break;
+            }
             /*  for each player:
                     place ante or return to lobby
                     remove from playerSet if they leave game */
@@ -91,23 +91,26 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
                 player.setPlayerHandRank(determineHandRank(player.getPlayerHand()));
             }
 
-            // TODO determine winner for each player and add to balance with payout()
             HashSet<ThreeCardPokerPlayer> winners = decideWinners(playerSet);
 
             System.out.println(flipAllCards()); // TODO more display based on hand results and payouts
-            // for each winning 3cpokerplayer payout(player.getAccount(), $$)
             for (ThreeCardPokerPlayer winner : winners) {
                 payout(winner.getAccount(), 10);
             }
 
-
-            // TODO discard all hands and shuffle
+            // TODO discard all hands
+            deck.shuffle();
         }
     }
 
     public HashSet<ThreeCardPokerPlayer> decideWinners(HashSet<ThreeCardPokerPlayer> potentialWinners) {
-        // compare each potentialWinner HandRank to the dealer HandRank
-        return potentialWinners;
+        HashSet<ThreeCardPokerPlayer> winners = new HashSet<>();
+        for (ThreeCardPokerPlayer potential : potentialWinners) {
+            if (potential.getPlayerHandRank().compareTo(dealerHandRank) > 0) {
+                winners.add(potential);
+            }
+        }
+        return winners;
     }
 
     public HandRank determineHandRank(List<Card> hand) {
@@ -150,9 +153,10 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
 
     @Override
     public String printInstructions() {
-        return "----------------------------------\n" +
-               "---Welcome to Three Card Poker----\n" +
-               "----------------------------------\n";
+        return "-------------------------------------\n" +
+               "---- Welcome to Three Card Poker ----\n" +
+               "-------------------------------------\n" +
+               "Place an ante of 5 to see if you win \n";
     }
 
     @Override

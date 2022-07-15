@@ -242,7 +242,6 @@ public class ThreeCardPokerGameTest {
         HandRank actual = newGame.determineHandRank(hand);
         Assert.assertNotEquals(expected, actual);
     }
-
     @Test
     public void determineHandRankThreeOfAKindTest() {
         List<Card> hand = new ArrayList<>();
@@ -261,7 +260,6 @@ public class ThreeCardPokerGameTest {
         HandRank actual = newGame.determineHandRank(hand);
         Assert.assertEquals(expected, actual);
     }
-
     @Test
     public void determineHandRankNotThreeOfAKindTest() {
         List<Card> hand = new ArrayList<>();
@@ -280,7 +278,6 @@ public class ThreeCardPokerGameTest {
         HandRank actual = newGame.determineHandRank(hand);
         Assert.assertNotEquals(expected, actual);
     }
-
     @Test
     public void determineHandRankOnePairTest() {
         List<Card> hand = new ArrayList<>();
@@ -299,7 +296,6 @@ public class ThreeCardPokerGameTest {
         HandRank actual = newGame.determineHandRank(hand);
         Assert.assertEquals(expected, actual);
     }
-
     @Test
     public void determineHandRankNotOnePairTest() {
         List<Card> hand = new ArrayList<>();
@@ -318,7 +314,6 @@ public class ThreeCardPokerGameTest {
         HandRank actual = newGame.determineHandRank(hand);
         Assert.assertNotEquals(expected, actual);
     }
-
     @Test
     public void determineHandRankHighCardTest() {
         List<Card> hand = new ArrayList<>();
