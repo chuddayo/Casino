@@ -1,15 +1,17 @@
 package com.github.zipcodewilmington.casino.games.dicegames;
 
 import com.github.zipcodewilmington.casino.Account;
-import com.github.zipcodewilmington.casino.GamblingGameInterface;
 import com.github.zipcodewilmington.casino.MultiplayerGamblingGame;
 import com.github.zipcodewilmington.casino.Player;
+import com.github.zipcodewilmington.utils.AnsiColor;
+import com.github.zipcodewilmington.utils.IOConsole;
 
 import java.util.HashSet;
 import java.util.Scanner;
 
 public class HighLowDice implements MultiplayerGamblingGame {
 
+    private final IOConsole console = new IOConsole(AnsiColor.BLUE);
     private HashSet<HighLowDicePlayer> players;
     private final Scanner scan = new Scanner(System.in);
     private final Dice dice = new Dice(2);
@@ -21,7 +23,7 @@ public class HighLowDice implements MultiplayerGamblingGame {
 
     @Override
     public void beginGame() {
-        printInstructions();
+        System.out.println(printInstructions());
         for (HighLowDicePlayer player : players) {
             String username = player.getAccount().getUserName();
             int betAmount = printAndScanInt("Hi player " + username + "! Please enter the number of tokens you wish to wager");
@@ -57,10 +59,10 @@ public class HighLowDice implements MultiplayerGamblingGame {
     public void payout() {
         for (HighLowDicePlayer player : players) {
             if (player.getBet().equals(this.winningBet)) {
-                System.out.println("Congratulations " + player.getAccount().getUserName() + " on winning " + player.getBetAmount() + " tokens!");
+                System.out.println("Congratulations player " + player.getAccount().getUserName() + " on winning " + player.getBetAmount() + " tokens! Yay!!! :)");
                 player.getAccount().addBalance(player.getBetAmount());
             } else {
-                System.out.println("Sorry " + player.getAccount().getUserName() + " unfortunately you lost " + player.getBetAmount() + " tokens! :(");
+                System.out.println("RIP player " + player.getAccount().getUserName() + " unfortunately you lost " + player.getBetAmount() + " tokens! :(");
                 player.getAccount().deductBalance(player.getBetAmount());
             }
         }
@@ -68,18 +70,20 @@ public class HighLowDice implements MultiplayerGamblingGame {
 
     @Override
     public String printInstructions() {
-        return  "============Welcome to the high low dice game!============\n" +
-                "  ____\n" +
-                " /\\' .\\    _____\n" +
-                "/: \\___\\  / .  /\\\n" +
-                "\\' / . / /____/..\\\n" +
-                " \\/___/  \\'  '\\  /\n" +
-                "          \\'__'\\/" +
-                "========================= Rules: =========================\n" +
+        return  "============ Welcome to the high low dice game!============\n" +
+                "\t\t\t\t\t" + "  ____\n" +
+                "\t\t\t\t\t" + " /\\' .\\    _____\n" +
+                "\t\t\t\t\t" + "/: \\___\\  / .  /\n" +
+                "\t\t\t\t\t" + "\\' / . / /____/..\\\n" +
+                "\t\t\t\t\t" + " \\/___/  \\'  '\\  /\n" +
+                "\t\t\t\t\t" + "          \\'__'\\/\n" +
+                "\n" +
+                "========================== Rules: ==========================\n" +
                 "1. Place your bets on high, low or seven\n" +
                 "2. High -- sum of the dice is 8, 9, 10, 11 or 12\n" +
                 "3. Seven -- the outcome is 7\n" +
-                "4. Low -- sum of the dice is 1, 2, 3, 4, 5, or 6";
+                "4. Low -- sum of the dice is 1, 2, 3, 4, 5, or 6\n" +
+                "\n";
     }
 
     public String printAndScanStr(String s) {
