@@ -66,14 +66,16 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
             /*  for each player:
                     place ante or return to lobby
                     remove from playerSet if they leave game */
+            HashSet<ThreeCardPokerPlayer> removePlayers = new HashSet<>();
             for (ThreeCardPokerPlayer player : playerSet) {
-                int playerInput = console.getIntegerInput(": (1) Place Ante  (2) Return to Lobby");
+                int playerInput = console.getIntegerInput(player.getPlayerName() + " : (1) Place Ante  (2) Return to Lobby");
                 if (playerInput == 1) {
                     player.getPlayerAccount().deductBalance(ante);
                 } else if (playerInput == 2) {
-                    playerSet.remove(player);
+                    removePlayers.add(player);
                 }
             }
+            playerSet.removeAll(removePlayers);
             if (playerSet.isEmpty()) break; // exit game
 
             // deal the dealer in and all players remaining who have anted

@@ -22,7 +22,7 @@ local.properties
 *.launch
 
 *.txt
-
+accounts.txt
 # PyDev specific (Python IDE for Eclipse)
 *.pydevproject
 

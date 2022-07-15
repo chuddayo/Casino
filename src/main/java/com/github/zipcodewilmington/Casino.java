@@ -34,47 +34,73 @@ public class Casino {
                    String gameSelectionInput = getGameSelectionInput().toUpperCase();
 
                    if (gameSelectionInput.equals("HIGH LOW DICE")) {
-                       String accountName = console.getStringInput("Enter your account name:");
-                       String accountPassword = console.getStringInput("Enter your account password:");
                        HashSet<HighLowDicePlayer> dicePlayers = new HashSet<>();
-                       Account account = accountManager.getAccount(accountName, accountPassword);
-                       if (account != null) {
-                           HighLowDicePlayer dicePlayer = new HighLowDicePlayer(account);
-                           dicePlayers.add(dicePlayer);
-                           HighLowDice diceGame = new HighLowDice(dicePlayers);
-                           diceGame.beginGame();
-                           accountManager.updateAccounts();
-                       } else {
-                           // TODO - implement better exception handling
-                           String errorMessage = "No account found with name of [ %s ] and password of [ %s ]";
-                           throw new RuntimeException(String.format(errorMessage, accountPassword, accountName));
+
+                       while (true){
+                           String accountName = console.getStringInput("Enter your account name:");
+                           String accountPassword = console.getStringInput("Enter your account password:");
+                           Account account = accountManager.getAccount(accountName, accountPassword);
+
+                           if (account != null) {
+                               HighLowDicePlayer dicePlayer = new HighLowDicePlayer(account);
+                               dicePlayers.add(dicePlayer);
+                           } else {
+                               // TODO - implement better exception handling
+                               String errorMessage = "No account found with name of [ %s ] and password of [ %s ]";
+                               throw new RuntimeException(String.format(errorMessage, accountPassword, accountName));
+                           }
+
+                           int loginMoreOrPlay = console.getIntegerInput(
+                                   "(1) Login another user (2) Begin Play  (3) Return to Main Lobby");
+                           if (loginMoreOrPlay == 2) {
+                               HighLowDice diceGame = new HighLowDice(dicePlayers);
+                               diceGame.beginGame();
+                               accountManager.updateAccounts();
+                               break;
+                           } else if (loginMoreOrPlay == 3) {
+                               break;
+                           }
                        }
+
                    } else if (gameSelectionInput.equals("THREE CARD POKER")) {
-                       String accountName = console.getStringInput("Enter your account name:");
-                       String accountPassword = console.getStringInput("Enter your account password:");
                        HashSet<ThreeCardPokerPlayer> threeCardPlayers = new HashSet<>();
-                       Account account = accountManager.getAccount(accountName, accountPassword);
-                       if (account != null) {
-                           ThreeCardPokerPlayer threeCardPokerPlayer = new ThreeCardPokerPlayer(account);
-                           threeCardPlayers.add(threeCardPokerPlayer);
-                           ThreeCardPokerGame threeCardPokerGame = new ThreeCardPokerGame(threeCardPlayers);
-                           threeCardPokerGame.beginGame();
-                           accountManager.updateAccounts();
-                       } else {
-                           // TODO - implement better exception handling
-                           String errorMessage = "No account found with name of [ %s ] and password of [ %s ]";
-                           throw new RuntimeException(String.format(errorMessage, accountPassword, accountName));
+
+                       while (true) {
+                           String accountName = console.getStringInput("Enter your account name:");
+                           String accountPassword = console.getStringInput("Enter your account password:");
+                           Account account = accountManager.getAccount(accountName, accountPassword);
+
+                           if (account != null) {
+                               ThreeCardPokerPlayer threeCardPokerPlayer = new ThreeCardPokerPlayer(account);
+                               threeCardPlayers.add(threeCardPokerPlayer);
+                           } else {
+                               // TODO - implement better exception handling
+                               String errorMessage = "No account found with name of [ %s ] and password of [ %s ]";
+                               throw new RuntimeException(String.format(errorMessage, accountPassword, accountName));
+                           }
+
+                           int loginMoreOrPlay = console.getIntegerInput(
+                                   "(1) Login another user (2) Begin Play  (3) Return to Main Lobby");
+                           if (loginMoreOrPlay == 2) {
+                               ThreeCardPokerGame threeCardPokerGame = new ThreeCardPokerGame(threeCardPlayers);
+                               threeCardPokerGame.beginGame();
+                               accountManager.updateAccounts();
+                               break;
+                           } else if (loginMoreOrPlay == 3) {
+                               break;
+                           }
                        }
+
                    } else if (gameSelectionInput.equals("SLOTS")) {
                        String accountName = console.getStringInput("Enter your account name:");
                        String accountPassword = console.getStringInput("Enter your account password:");
-                       HashSet<ThreeCardPokerPlayer> threeCardPlayers = new HashSet<>();
+                       HashSet<SlotsPlayer> slotsPlayers = new HashSet<>();
                        Account account = accountManager.getAccount(accountName, accountPassword);
                        if (account != null) {
-                           ThreeCardPokerPlayer threeCardPokerPlayer = new ThreeCardPokerPlayer(account);
-                           threeCardPlayers.add(threeCardPokerPlayer);
-                           ThreeCardPokerGame threeCardPokerGame = new ThreeCardPokerGame(threeCardPlayers);
-                           threeCardPokerGame.beginGame();
+                           SlotsPlayer slotsPlayer = new SlotsPlayer(account);
+                           slotsPlayers.add(slotsPlayer);
+                           SlotsGame slotsGame = new SlotsGame(slotsPlayers);
+                           slotsGame.beginGame();
                            accountManager.updateAccounts();
                        } else {
                            // TODO - implement better exception handling
