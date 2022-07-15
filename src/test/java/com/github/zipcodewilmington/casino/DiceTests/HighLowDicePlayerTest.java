@@ -1,4 +1,4 @@
-package com.github.zipcodewilmington;
+package com.github.zipcodewilmington.casino.DiceTests;
 
 import com.github.zipcodewilmington.casino.Account;
 import com.github.zipcodewilmington.casino.games.dicegames.HighLowDice;

@@ -26,10 +26,11 @@ public class HighLowDice implements MultiplayerGamblingGame {
         System.out.println(printInstructions());
         for (HighLowDicePlayer player : players) {
             String username = player.getAccount().getUserName();
-            int betAmount = console.getIntegerInput("Hi player " + username + "! Please enter the number of tokens you wish to wager");
+            // int betAmount = console.getIntegerInput("Hi player " + username + "! Please enter the number of tokens you wish to wager:");
+            // player.placeBet(betAmount);
+            // String bet = console.getStringInput("Hi player " + username + "! Please place your bet selection (high, low, or seven):").toLowerCase();
+            // player.bet(bet);
 
-
-            /*
             int betAmount = printAndScanInt("Hi player " + username + "! Please enter the number of tokens you wish to wager");
             player.placeBet(betAmount);
             scan.nextLine();
@@ -37,16 +38,15 @@ public class HighLowDice implements MultiplayerGamblingGame {
             player.bet(bet);
             while (player.getBetAmount() == -1 || player.getBet() == "invalid") {
                 if (player.getBetAmount() == -1) {
-                    betAmount = printAndScanInt("Invalid bet amount! Sorry player " + username + ", please re-input the number of tokens you would like to wager");
+                    betAmount = printAndScanInt("Invalid bet amount! Sorry player " + username + ", please re-enter the number of tokens you wish to wager");
                     player.placeBet(betAmount);
                     scan.nextLine();
                 }
                 if (player.getBet() == "invalid") {
-                    bet = printAndScanStr("Invalid bet selection! Sorry player " + username + ", please re-place your bet selection (high, low or seven)").toLowerCase();
+                    bet = printAndScanStr("Invalid bet selection! Sorry player " + username + ", please re-enter your bet selection (high, low or seven)").toLowerCase();
                     player.bet(bet);
                 }
             }
-             */
         }
         getWinningBet();
         payout();
