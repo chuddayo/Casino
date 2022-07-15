@@ -19,18 +19,37 @@ public class TicTacToe implements GameInterface {
 
     String position= " ";
 
-    private static boolean isValidPlay (String[][]userInterface, String position ){
+    private static boolean isValidPlay (String[][]userInterface, String userInput ){
+        //Scanner scanner = new Scanner(System.in);
+        //String userInput = scanner.nextLine();
+        switch(userInput) {
+            case "a":
+                return (Objects.equals(userInterface[0][0], " "));
+            case "b":
+                return
+                        (Objects.equals(userInterface[0][1], " "));
+            case "c":
+                return (Objects.equals(userInterface[0][2], " "));
+            case "d":
+                return
+                        (Objects.equals(userInterface[1][0], " "));
+            case "e":
+                return (Objects.equals(userInterface[1][1], " "));
+            case "f":
+                return
+                        (Objects.equals(userInterface[1][2], " "));
+            case "g":
+                return (Objects.equals(userInterface[2][0], " "));
+            case "h":
+                return
+                        (Objects.equals(userInterface[2][1], " "));
+            case "i":
+                return
+                        (Objects.equals(userInterface[2][2], " "));
+            default:
+                return false;
+        }
 
-       if (Objects.equals(userInterface[0][0], " ")){return true;}
-       else if(Objects.equals(userInterface[0][1], " ")){return true;}
-       else if(Objects.equals(userInterface[0][2], " ")){return true;}
-       else if (Objects.equals(userInterface[1][0], " ")){return true;}
-       else if (Objects.equals(userInterface[1][1], " ")){return true;}
-       else if (Objects.equals(userInterface[1][2], " ")){return true;}
-       else if (Objects.equals(userInterface[2][0], " ")){return true;}
-       else if (Objects.equals(userInterface[2][1], " ")){return true;}
-       else if (Objects.equals(userInterface[2][2], " ")){return true;}
-       else {return false;}
     }
     private static void gamePlay(int attempts) {
        // while (attempts <= 5) {
