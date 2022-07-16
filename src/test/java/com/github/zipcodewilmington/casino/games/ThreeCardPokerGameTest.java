@@ -117,6 +117,28 @@ public class ThreeCardPokerGameTest {
         Assert.assertEquals(expectedHand, hand);
     }
     @Test
+    public void pushOnePairHandTest1() {
+        List<Card> hand = new ArrayList<>();
+        Card card = new Card(queen, diamonds);
+        Card card2 = new Card(king, spades);
+        Card card3 = new Card(queen, clubs);
+        hand.add(card2);
+        hand.add(card);
+        hand.add(card3);
+
+        List<Card> expectedHand = new ArrayList<>();
+        expectedHand.add(card2);
+        expectedHand.add(card);
+        expectedHand.add(card3);
+
+        playerSet.add(player1);
+        playerSet.add(player2);
+        newGame = new ThreeCardPokerGame(playerSet);
+
+        List<Card> actual = newGame.pushOnePairHand(hand);
+        Assert.assertEquals(expectedHand, actual);
+    }
+    @Test
     public void determineHandRankStraightTest() {
         List<Card> hand = new ArrayList<>();
         Card card = new Card(five, diamonds);

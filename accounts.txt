@@ -1,2 +1,2 @@
-Ryan,ok,1106
-Kyle,ok,478
+Ryan,ok,1131
+Kyle,ok,523

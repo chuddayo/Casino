@@ -113,15 +113,44 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
     public HashSet<ThreeCardPokerPlayer> decideWinners(HashSet<ThreeCardPokerPlayer> potentialWinners) {
         HashSet<ThreeCardPokerPlayer> winners = new HashSet<>();
         for (ThreeCardPokerPlayer potential : potentialWinners) {
-            if (potential.getPlayerHandRank().compareTo(dealerHandRank) > 0) {
+            int relativeHandValue = potential.getPlayerHandRank().compareTo(dealerHandRank);
+            if (relativeHandValue > 0) {
                 winners.add(potential);
+            } else if (relativeHandValue == 0) {
+                if (potential.getPlayerHandRank().equals(HandRank.ONEPAIR)) {
+                    dealerHand = pushOnePairHand(dealerHand);
+                    potential.setPlayerHand(pushOnePairHand(potential.getPlayerHand()));
+                }
+                if (potential.getPlayerHandRank().equals(HandRank.STRAIGHTFLUSH) ||
+                        potential.getPlayerHandRank().equals(HandRank.STRAIGHT)) {
+                    if (potential.getPlayerHand().get(2).getCardValue().compareTo(dealerHand.get(2).getCardValue()) > 0) {
+                        winners.add(potential);
+                    }
+                } else if (potential.getPlayerHandRank().equals(HandRank.THREEOFAKIND)) {
+                    if (potential.getPlayerHand().get(2).getCardValue().compareTo(dealerHand.get(2).getCardValue()) > 0) {
+                        winners.add(potential);
+                    }
+                } else if (potential.getPlayerHandRank().equals(HandRank.FLUSH) ||
+                        potential.getPlayerHandRank().equals(HandRank.HIGHCARD) ||
+                        potential.getPlayerHandRank().equals(HandRank.ONEPAIR)) {
+                    relativeHandValue = potential.getPlayerHand().get(2).getCardValue().compareTo(dealerHand.get(2).getCardValue());
+                    if (relativeHandValue > 0) winners.add(potential);
+                    else if (relativeHandValue == 0) {
+                        relativeHandValue = potential.getPlayerHand().get(1).getCardValue().compareTo(dealerHand.get(1).getCardValue());
+                        if (relativeHandValue > 0) winners.add(potential);
+                        else if (relativeHandValue == 0) {
+                            if (potential.getPlayerHand().get(0).getCardValue().compareTo(dealerHand.get(0).getCardValue()) > 0) {
+                                winners.add(potential);
+                            }
+                        }
+                    }
+                }
             }
         }
         return winners;
     }
 
     public HandRank determineHandRank(List<Card> hand) {
-        HandRank handRank;
         sortHand(hand);
         // is it a straight?
         if ((hand.get(2).getCardValue().compareTo(hand.get(1).getCardValue()) == 1) &&
@@ -156,6 +185,22 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
     public void sortHand(List<Card> hand) {
         Comparator<Card> byCardValue = Card::compareTo;
         hand.sort(byCardValue);
+    }
+
+    public List<Card> pushOnePairHand(List<Card> hand) {
+        List<Card> sortedPairHand = new ArrayList<>();
+        if (hand.get(0).getCardValue().compareTo(hand.get(1).getCardValue()) == 0) {
+            sortedPairHand.add(hand.get(2));
+            sortedPairHand.add(hand.get(1));
+            sortedPairHand.add(hand.get(0));
+        } else if (hand.get(0).getCardValue().compareTo(hand.get(2).getCardValue()) == 0) {
+            sortedPairHand.add(hand.get(1));
+            sortedPairHand.add(hand.get(0));
+            sortedPairHand.add(hand.get(2));
+        } else if (hand.get(1).getCardValue().compareTo(hand.get(2).getCardValue()) == 0) {
+            return hand;
+        }
+        return sortedPairHand;
     }
 
     @Override
