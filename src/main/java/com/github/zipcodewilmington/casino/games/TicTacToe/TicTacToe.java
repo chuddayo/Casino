@@ -16,7 +16,7 @@ public class TicTacToe implements GameInterface {
 
     @Override
     public String printInstructions() {
-        return null;
+        return "============Welcome to Venetian TIC TAC TOE!============";
     }
 
     @Override
