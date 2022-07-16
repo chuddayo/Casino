@@ -20,9 +20,9 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
         this.dealerHand = new ArrayList<>();
     }
 
-    public HashSet<ThreeCardPokerPlayer> getPlayerSet() {
-        return playerSet;
-    }
+//    public HashSet<ThreeCardPokerPlayer> getPlayerSet() {
+//        return playerSet;
+//    }
 
     public List<Card> dealHand() {
         List<Card> threeCardHand = new ArrayList<>();
@@ -36,6 +36,7 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
         for (Card card : hand) {
             deck.discard(card);
         }
+        hand.clear();
     }
 
     public StringBuilder flipAllCards() {
@@ -100,7 +101,11 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
                 payout(winner.getAccount(), 10);
             }
 
-            // TODO discard all hands
+            // TODO write discard tests
+            discardHand(dealerHand);
+            for (ThreeCardPokerPlayer player : playerSet) {
+                discardHand(player.getPlayerHand());
+            }
             deck.shuffle();
         }
     }
