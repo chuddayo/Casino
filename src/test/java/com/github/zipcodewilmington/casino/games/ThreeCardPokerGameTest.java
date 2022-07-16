@@ -16,6 +16,7 @@ public class ThreeCardPokerGameTest {
     Suit hearts;
     Suit diamonds;
     Suit clubs;
+    CardValue two;
     CardValue three;
     CardValue four;
     CardValue five;
@@ -32,6 +33,7 @@ public class ThreeCardPokerGameTest {
 
     @Before
     public void setup(){
+        two = CardValue.TWO;
         three = CardValue.THREE;
         four = CardValue.FOUR;
         five = CardValue.FIVE;
@@ -354,17 +356,52 @@ public class ThreeCardPokerGameTest {
         HandRank actual = newGame.determineHandRank(hand);
         Assert.assertEquals(expected, actual);
     }
-    //    @Test
-//    public void flipAllCardsTest() {
-//        Account account1 = new Account("Kyle", "p", 5000);
-//        Account account2 = new Account("Thina", "q", 8000);
-//        ThreeCardPokerPlayer player1 = new ThreeCardPokerPlayer(account1);
-//        ThreeCardPokerPlayer player2 = new ThreeCardPokerPlayer(account2);
-//        HashSet<ThreeCardPokerPlayer> playerSet = new HashSet<>();
-//        playerSet.add(player1);
-//        playerSet.add(player2);
-//        ThreeCardPokerGame newGame = new ThreeCardPokerGame(playerSet);
-//
-//        System.out.println(newGame.flipAllCards());
-//    }
+    @Test
+    public void determineHandRankA23Test() {
+        List<Card> hand = new ArrayList<>();
+        Card card = new Card(ace, diamonds);
+        Card card2 = new Card(three, clubs);
+        Card card3 = new Card(two, hearts);
+        hand.add(card);
+        hand.add(card2);
+        hand.add(card3);
+
+        HandRank expected = HandRank.STRAIGHT;
+        playerSet.add(player1);
+        playerSet.add(player2);
+        newGame = new ThreeCardPokerGame(playerSet);
+
+        HandRank actual = newGame.determineHandRank(hand);
+        Assert.assertEquals(expected, actual);
+    }
+    @Test
+    public void determineWinnerTest1() {
+        List<Card> hand1 = new ArrayList<>();
+        Card card1 = new Card(ace, diamonds);
+        Card card2 = new Card(king, clubs);
+        Card card3 = new Card(seven, hearts);
+        hand1.add(card1);
+        hand1.add(card2);
+        hand1.add(card3);
+
+        List<Card> hand2 = new ArrayList<>();
+        Card card4 = new Card(king, hearts);
+        Card card5 = new Card(ace, clubs);
+        Card card6 = new Card(seven, spades);
+        hand2.add(card4);
+        hand2.add(card5);
+        hand2.add(card6);
+
+        playerSet.add(player1);
+        newGame = new ThreeCardPokerGame(playerSet);
+        newGame.setDealerHand(hand1);
+        player1.setPlayerHand(hand2);
+        newGame.setDealerHandRank(newGame.determineHandRank(newGame.getDealerHand()));
+        player1.setPlayerHandRank(newGame.determineHandRank(player1.getPlayerHand()));
+
+        Assert.assertEquals(1, playerSet.size());
+        HashSet<ThreeCardPokerPlayer> expectedWinners = newGame.decideWinners(playerSet);
+
+        Assert.assertTrue(expectedWinners.isEmpty());
+    }
 }

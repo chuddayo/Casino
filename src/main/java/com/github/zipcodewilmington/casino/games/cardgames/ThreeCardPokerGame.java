@@ -218,8 +218,7 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
 
     @Override
     public HashSet<Player> decideWinner(HashSet<Player> players) {
-        // if playerHand <= dealerHand, remove player from players
-        // prob need an enum for hand ranks?
+        // TODO remove from interface?
         return null;
     }
 
@@ -227,5 +226,21 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
     public void payout(Account account, int payoutAmount) {
         account.addBalance(payoutAmount);
         System.out.println("Paid $" + payoutAmount + " to " + account.getUserName() + "'s account!");
+    }
+
+    public List<Card> getDealerHand() {
+        return dealerHand;
+    }
+
+    public void setDealerHand(List<Card> dealerHand) {
+        this.dealerHand = dealerHand;
+    }
+
+    public HandRank getDealerHandRank() {
+        return dealerHandRank;
+    }
+
+    public void setDealerHandRank(HandRank dealerHandRank) {
+        this.dealerHandRank = dealerHandRank;
     }
 }
