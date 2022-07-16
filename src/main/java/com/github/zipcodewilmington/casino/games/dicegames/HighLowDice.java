@@ -11,7 +11,7 @@ import java.util.Scanner;
 
 public class HighLowDice implements MultiplayerGamblingGame {
 
-    private final IOConsole console = new IOConsole(AnsiColor.BLUE);
+    private final IOConsole console = new IOConsole(AnsiColor.PURPLE);
     private HashSet<HighLowDicePlayer> players;
     private final Scanner scan = new Scanner(System.in);
     private final Dice dice = new Dice(2);
@@ -26,6 +26,10 @@ public class HighLowDice implements MultiplayerGamblingGame {
         System.out.println(printInstructions());
         for (HighLowDicePlayer player : players) {
             String username = player.getAccount().getUserName();
+            int betAmount = console.getIntegerInput("Hi player " + username + "! Please enter the number of tokens you wish to wager");
+
+
+            /*
             int betAmount = printAndScanInt("Hi player " + username + "! Please enter the number of tokens you wish to wager");
             player.placeBet(betAmount);
             scan.nextLine();
@@ -42,6 +46,7 @@ public class HighLowDice implements MultiplayerGamblingGame {
                     player.bet(bet);
                 }
             }
+             */
         }
         getWinningBet();
         payout();
