@@ -20,7 +20,12 @@ public class ThreeCardPokerGameTest {
     CardValue three;
     CardValue four;
     CardValue five;
+    CardValue six;
     CardValue seven;
+    CardValue eight;
+    CardValue nine;
+    CardValue ten;
+    CardValue jack;
     CardValue queen;
     CardValue king;
     CardValue ace;
@@ -37,7 +42,12 @@ public class ThreeCardPokerGameTest {
         three = CardValue.THREE;
         four = CardValue.FOUR;
         five = CardValue.FIVE;
+        six = CardValue.SIX;
         seven = CardValue.SEVEN;
+        eight = CardValue.EIGHT;
+        nine = CardValue.NINE;
+        ten = CardValue.TEN;
+        jack = CardValue.JACK;
         queen = CardValue.QUEEN;
         king = CardValue.KING;
         ace = CardValue.ACE;
@@ -376,6 +386,7 @@ public class ThreeCardPokerGameTest {
     }
     @Test
     public void determineWinnerTest1() {
+        // tie expected
         List<Card> hand1 = new ArrayList<>();
         Card card1 = new Card(ace, diamonds);
         Card card2 = new Card(king, clubs);
@@ -403,5 +414,130 @@ public class ThreeCardPokerGameTest {
         HashSet<ThreeCardPokerPlayer> expectedWinners = newGame.decideWinners(playerSet);
 
         Assert.assertTrue(expectedWinners.isEmpty());
+    }
+    @Test
+    public void determineWinnerTest2() {
+        // player to lose, dealer has straight > player's flush
+        List<Card> dealerHand = new ArrayList<>();
+        Card card1 = new Card(four, diamonds);
+        Card card2 = new Card(five, clubs);
+        Card card3 = new Card(six, hearts);
+        dealerHand.add(card1);
+        dealerHand.add(card2);
+        dealerHand.add(card3);
+
+        List<Card> playerHand = new ArrayList<>();
+        Card card4 = new Card(king, hearts);
+        Card card5 = new Card(ace, hearts);
+        Card card6 = new Card(seven, hearts);
+        playerHand.add(card4);
+        playerHand.add(card5);
+        playerHand.add(card6);
+
+        playerSet.add(player1);
+        newGame = new ThreeCardPokerGame(playerSet);
+        newGame.setDealerHand(dealerHand);
+        player1.setPlayerHand(playerHand);
+        newGame.setDealerHandRank(newGame.determineHandRank(newGame.getDealerHand()));
+        player1.setPlayerHandRank(newGame.determineHandRank(player1.getPlayerHand()));
+
+        Assert.assertEquals(1, playerSet.size());
+        HashSet<ThreeCardPokerPlayer> expectedWinners = newGame.decideWinners(playerSet);
+
+        Assert.assertTrue(expectedWinners.isEmpty());
+    }
+    @Test
+    public void determineWinnerTest3() {
+        // player to win with 8-7-2 over 8-6-4
+        List<Card> dealerHand = new ArrayList<>();
+        Card card1 = new Card(four, diamonds);
+        Card card2 = new Card(eight, clubs);
+        Card card3 = new Card(six, hearts);
+        dealerHand.add(card1);
+        dealerHand.add(card2);
+        dealerHand.add(card3);
+
+        List<Card> playerHand = new ArrayList<>();
+        Card card4 = new Card(two, spades);
+        Card card5 = new Card(eight, hearts);
+        Card card6 = new Card(seven, hearts);
+        playerHand.add(card4);
+        playerHand.add(card5);
+        playerHand.add(card6);
+
+        playerSet.add(player1);
+        newGame = new ThreeCardPokerGame(playerSet);
+        newGame.setDealerHand(dealerHand);
+        player1.setPlayerHand(playerHand);
+        newGame.setDealerHandRank(newGame.determineHandRank(newGame.getDealerHand()));
+        player1.setPlayerHandRank(newGame.determineHandRank(player1.getPlayerHand()));
+
+        Assert.assertEquals(1, playerSet.size());
+        HashSet<ThreeCardPokerPlayer> expectedWinners = newGame.decideWinners(playerSet);
+
+        Assert.assertEquals(1, expectedWinners.size());
+    }
+    @Test
+    public void determineWinnerTest4() {
+        // player to lose sf to sf with 765hhh < T98sss
+        List<Card> dealerHand = new ArrayList<>();
+        Card card1 = new Card(ten, spades);
+        Card card2 = new Card(nine, spades);
+        Card card3 = new Card(eight, spades);
+        dealerHand.add(card1);
+        dealerHand.add(card2);
+        dealerHand.add(card3);
+
+        List<Card> playerHand = new ArrayList<>();
+        Card card4 = new Card(seven, hearts);
+        Card card5 = new Card(five, hearts);
+        Card card6 = new Card(six, hearts);
+        playerHand.add(card4);
+        playerHand.add(card5);
+        playerHand.add(card6);
+
+        playerSet.add(player1);
+        newGame = new ThreeCardPokerGame(playerSet);
+        newGame.setDealerHand(dealerHand);
+        player1.setPlayerHand(playerHand);
+        newGame.setDealerHandRank(newGame.determineHandRank(newGame.getDealerHand()));
+        player1.setPlayerHandRank(newGame.determineHandRank(player1.getPlayerHand()));
+
+        Assert.assertEquals(1, playerSet.size());
+        HashSet<ThreeCardPokerPlayer> expectedWinners = newGame.decideWinners(playerSet);
+
+        Assert.assertEquals(0, expectedWinners.size());
+    }
+
+    @Test
+    public void determineWinnerTest5() {
+        // player to win with 876 high straight over dealer's A23
+        List<Card> dealerHand = new ArrayList<>();
+        Card card1 = new Card(three, spades);
+        Card card2 = new Card(two, spades);
+        Card card3 = new Card(ace, diamonds);
+        dealerHand.add(card1);
+        dealerHand.add(card2);
+        dealerHand.add(card3);
+
+        List<Card> playerHand = new ArrayList<>();
+        Card card4 = new Card(seven, hearts);
+        Card card5 = new Card(eight, clubs);
+        Card card6 = new Card(six, hearts);
+        playerHand.add(card4);
+        playerHand.add(card5);
+        playerHand.add(card6);
+
+        playerSet.add(player1);
+        newGame = new ThreeCardPokerGame(playerSet);
+        newGame.setDealerHand(dealerHand);
+        player1.setPlayerHand(playerHand);
+        newGame.setDealerHandRank(newGame.determineHandRank(newGame.getDealerHand()));
+        player1.setPlayerHandRank(newGame.determineHandRank(player1.getPlayerHand()));
+
+        Assert.assertEquals(1, playerSet.size());
+        HashSet<ThreeCardPokerPlayer> expectedWinners = newGame.decideWinners(playerSet);
+
+        Assert.assertEquals(1, expectedWinners.size());
     }
 }

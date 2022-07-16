@@ -85,7 +85,7 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
                 player.setPlayerHand(dealHand());
             }
 
-            // TODO show each player their hand and ask for bet
+            // TODO show each player their hand and ask for PLAY bet
             //    flag players as folded if they don't place further bet
 
             // determine rank of all hands still in
@@ -101,7 +101,7 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
                 payout(winner.getAccount(), 10);
             }
 
-            // TODO write discard tests
+            // TODO write discard tests, convert to cleanup method?
             discardHand(dealerHand);
             for (ThreeCardPokerPlayer player : playerSet) {
                 discardHand(player.getPlayerHand());
@@ -119,16 +119,23 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
                 winners.add(potential);
             // if the player and dealer have the same rank, we look closer at the card values
             } else if (relativeHandValue == 0) {
-                // if we're talking about two ONEPAIR hands, we'll do some special sorting to make comparison easier
-                if (potential.getPlayerHandRank().equals(HandRank.ONEPAIR)) {
-                    dealerHand = pushOnePairHand(dealerHand);
-                    potential.setPlayerHand(pushOnePairHand(potential.getPlayerHand()));
-                }
+
                 if (potential.getPlayerHandRank().equals(HandRank.STRAIGHTFLUSH) ||
                         potential.getPlayerHandRank().equals(HandRank.STRAIGHT)) {
+                    // re-ordering if player has 2 3 A
+                    if (potential.getPlayerHand().get(2).getCardValue().equals(CardValue.ACE) &&
+                            potential.getPlayerHand().get(1).getCardValue().equals(CardValue.THREE)) {
+                        potential.setPlayerHand(sortAceTwoThreeStraight(potential.getPlayerHand()));
+                    }
+                    // re-order if dealer has 2 3 A
+                    if (getDealerHand().get(2).getCardValue().equals(CardValue.ACE) &&
+                            getDealerHand().get(1).getCardValue().equals(CardValue.THREE)) {
+                        setDealerHand(sortAceTwoThreeStraight(getDealerHand()));
+                    }
                     if (potential.getPlayerHand().get(2).getCardValue().compareTo(dealerHand.get(2).getCardValue()) > 0) {
                         winners.add(potential);
                     }
+
                 } else if (potential.getPlayerHandRank().equals(HandRank.THREEOFAKIND)) {
                     if (potential.getPlayerHand().get(2).getCardValue().compareTo(dealerHand.get(2).getCardValue()) > 0) {
                         winners.add(potential);
@@ -136,6 +143,13 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
                 } else if (potential.getPlayerHandRank().equals(HandRank.FLUSH) ||
                         potential.getPlayerHandRank().equals(HandRank.HIGHCARD) ||
                         potential.getPlayerHandRank().equals(HandRank.ONEPAIR)) {
+
+                    // if we're talking about two ONEPAIR hands, we'll do some special sorting to make comparison easier
+                    if (potential.getPlayerHandRank().equals(HandRank.ONEPAIR)) {
+                        dealerHand = pushOnePairHand(dealerHand);
+                        potential.setPlayerHand(pushOnePairHand(potential.getPlayerHand()));
+                    }
+                    // compare cards one at a time highest to lowest, or the paired cards then the third card
                     relativeHandValue = potential.getPlayerHand().get(2).getCardValue().compareTo(dealerHand.get(2).getCardValue());
                     if (relativeHandValue > 0) winners.add(potential);
                     else if (relativeHandValue == 0) {
@@ -190,6 +204,15 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
     public void sortHand(List<Card> hand) {
         Comparator<Card> byCardValue = Card::compareTo;
         hand.sort(byCardValue);
+    }
+
+    public List<Card> sortAceTwoThreeStraight(List<Card> hand) { // TODO write tests
+        // assuming hand currently 2 3 A
+        List<Card> threeHighStraight = new ArrayList<>();
+        threeHighStraight.add(hand.get(2));
+        threeHighStraight.add(hand.get(0));
+        threeHighStraight.add(hand.get(1));
+        return threeHighStraight;
     }
 
     public List<Card> pushOnePairHand(List<Card> hand) {
