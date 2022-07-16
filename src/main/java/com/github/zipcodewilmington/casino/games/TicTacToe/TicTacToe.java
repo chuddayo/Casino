@@ -12,10 +12,12 @@ import java.util.*;
 public class TicTacToe implements GameInterface {
 
     private final IOConsole console = new IOConsole(AnsiColor.BLUE);
-
-    private final Scanner scanner = new Scanner(System.in);
-
     private  HashSet<TicTacToePlayer> players;
+
+    @Override
+    public String printInstructions() {
+        return null;
+    }
 
     @Override
     public void beginGame() {
@@ -40,9 +42,9 @@ public class TicTacToe implements GameInterface {
             }
             displayUI(userInterface);
         }
-        scanner.close();
+        //scanner.close();
     }
-public TicTacToe(HashSet< TicTacToePlayer > players) {this.players = players;}
+public TicTacToe(HashSet< TicTacToePlayer > TicTacToePlayer) {this.players = TicTacToePlayer;}
 
 //    public static void main(String[] args) {
 //
@@ -50,7 +52,7 @@ public TicTacToe(HashSet< TicTacToePlayer > players) {this.players = players;}
 //    }
 
 
-    private static boolean isRoundComplete(String[][] userInterface) {
+    private boolean isRoundComplete(String[][] userInterface) {
 
         if (declareWinner(userInterface, "X")) {
 
@@ -78,24 +80,24 @@ public TicTacToe(HashSet< TicTacToePlayer > players) {this.players = players;}
     }
 
 
-    private static boolean declareWinner(String[][] board, String symbol) {
-        if ((board[0][0] == symbol && board [0][1] == symbol && board [0][2] == symbol) ||
-                (board[1][0] == symbol && board [1][1] == symbol && board [1][2] == symbol) ||
-                (board[2][0] == symbol && board [2][1] == symbol && board [2][2] == symbol) ||
+    private boolean declareWinner(String[][] board, String symbol) {
+        if ((Objects.equals(board[0][0], symbol) && Objects.equals(board[0][1], symbol) && Objects.equals(board[0][2], symbol)) ||
+                (Objects.equals(board[1][0], symbol) && Objects.equals(board[1][1], symbol) && Objects.equals(board[1][2], symbol)) ||
+                (Objects.equals(board[2][0], symbol) && Objects.equals(board[2][1], symbol) && Objects.equals(board[2][2], symbol)) ||
 
-                (board[0][0] == symbol && board [1][0] == symbol && board [2][0] == symbol) ||
-                (board[0][1] == symbol && board [1][1] == symbol && board [2][1] == symbol) ||
-                (board[0][2] == symbol && board [1][2] == symbol && board [2][2] == symbol) ||
+                (Objects.equals(board[0][0], symbol) && Objects.equals(board[1][0], symbol) && Objects.equals(board[2][0], symbol)) ||
+                (Objects.equals(board[0][1], symbol) && Objects.equals(board[1][1], symbol) && Objects.equals(board[2][1], symbol)) ||
+                (Objects.equals(board[0][2], symbol) && Objects.equals(board[1][2], symbol) && Objects.equals(board[2][2], symbol)) ||
 
-                (board[0][0] == symbol && board [1][1] == symbol && board [2][2] == symbol) ||
-                (board[0][2] == symbol && board [1][1] == symbol && board [2][0] == symbol) ) {
+                (Objects.equals(board[0][0], symbol) && Objects.equals(board[1][1], symbol) && Objects.equals(board[2][2], symbol)) ||
+                (Objects.equals(board[0][2], symbol) && Objects.equals(board[1][1], symbol) && Objects.equals(board[2][0], symbol)) ) {
             return true;
         }
         return false;
     }
 
 
-    private static void computerPlay(String[][] board) {
+    private void computerPlay(String[][] board) {
         Random rand = new Random();
         int computerMove;
         while (true) {
@@ -107,11 +109,11 @@ public TicTacToe(HashSet< TicTacToePlayer > players) {this.players = players;}
         System.out.println("Computer played " + computerMove);
         playerMove(board, Integer.toString(computerMove), "O");
     }
-    private static void userPlay (String[][] userInterface, Scanner scanner) {
+    private void userPlay (String[][] userInterface, Scanner scanner) {
         String userInput;
         while (true) {
-            System.out.println("Where would you like to play? (1-9)");
-            userInput = scanner.nextLine();
+            //System.out.println("Where would you like to play? (1-9)");
+            userInput = console.getStringInput("Where would you like to play? (1-9)");
             if (isValidPlay(userInterface, userInput)){
                 break;
             } else {
@@ -121,31 +123,31 @@ public TicTacToe(HashSet< TicTacToePlayer > players) {this.players = players;}
         playerMove(userInterface, userInput, "X");
     }
 
-    private static boolean isValidPlay (String[][] userInterface, String position) {
+    private boolean isValidPlay (String[][] userInterface, String position) {
         switch(position) {
             case "1":
-                return (userInterface[0][0] == " ");
+                return (Objects.equals(userInterface[0][0], " "));
             case "2":
-                return (userInterface[0][1] == " ");
+                return (Objects.equals(userInterface[0][1], " "));
             case "3":
-                return (userInterface[0][2] == " ");
+                return (Objects.equals(userInterface[0][2], " "));
             case "4":
-                return (userInterface[1][0] == " ");
+                return (Objects.equals(userInterface[1][0], " "));
             case "5":
-                return (userInterface[1][1] == " ");
+                return (Objects.equals(userInterface[1][1], " "));
             case "6":
-                return (userInterface[1][2] == " ");
+                return (Objects.equals(userInterface[1][2], " "));
             case "7":
-                return (userInterface[2][0] == " ");
+                return (Objects.equals(userInterface[2][0], " "));
             case "8":
-                return (userInterface[2][1] == " ");
+                return (Objects.equals(userInterface[2][1], " "));
             case "9":
-                return (userInterface[2][2] == " ");
+                return (Objects.equals(userInterface[2][2], " "));
             default:
                 return false;
         }
     }
-    private static void playerMove(String[][] userInterface, String position, String symbol) {
+    private void playerMove(String[][] userInterface, String position, String symbol) {
         switch(position) {
             case "1":
                 userInterface[0][0] = symbol;
@@ -179,7 +181,7 @@ public TicTacToe(HashSet< TicTacToePlayer > players) {this.players = players;}
         }
     }
 
-    private static void displayUI(String[][] userInterface) {
+    private void displayUI(String[][] userInterface) {
         System.out.println(userInterface[0][0] + " | " +  userInterface[0][1] + " | " +  userInterface[0][2] );
         System.out.println("-  -  - - ");
         System.out.println(userInterface[1][0] + " | " +  userInterface[1][1] + " | " +  userInterface[1][2] );
@@ -187,9 +189,6 @@ public TicTacToe(HashSet< TicTacToePlayer > players) {this.players = players;}
         System.out.println(userInterface[2][0] + " | " +  userInterface[2][1] + " | " + userInterface[2][2] );
     }
 
-    @Override
-    public String printInstructions() {
-        return null;
-    }
+
 
 }
