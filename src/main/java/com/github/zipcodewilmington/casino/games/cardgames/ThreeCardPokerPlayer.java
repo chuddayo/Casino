@@ -1,7 +1,6 @@
 package com.github.zipcodewilmington.casino.games.cardgames;
 
 import com.github.zipcodewilmington.casino.*;
-
 import java.util.List;
 
 public class ThreeCardPokerPlayer extends Player implements GamblingPlayer{
@@ -33,12 +32,9 @@ public class ThreeCardPokerPlayer extends Player implements GamblingPlayer{
     public List<Card> getPlayerHand() {
         return playerHand;
     }
+
     public void setPlayerHand(List<Card> playerHand) {
         this.playerHand = playerHand;
-    }
-
-    public int playOrFold() {
-        return 0; // TODO do we need this method? or should user input call play and fold methods separately
     }
 
     @Override
