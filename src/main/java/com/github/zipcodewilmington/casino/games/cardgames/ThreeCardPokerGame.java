@@ -114,9 +114,12 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
         HashSet<ThreeCardPokerPlayer> winners = new HashSet<>();
         for (ThreeCardPokerPlayer potential : potentialWinners) {
             int relativeHandValue = potential.getPlayerHandRank().compareTo(dealerHandRank);
+            // if player handrank is higher than dealer
             if (relativeHandValue > 0) {
                 winners.add(potential);
+            // if the player and dealer have the same rank, we look closer at the card values
             } else if (relativeHandValue == 0) {
+                // if we're talking about two ONEPAIR hands, we'll do some special sorting to make comparison easier
                 if (potential.getPlayerHandRank().equals(HandRank.ONEPAIR)) {
                     dealerHand = pushOnePairHand(dealerHand);
                     potential.setPlayerHand(pushOnePairHand(potential.getPlayerHand()));
@@ -153,8 +156,11 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
     public HandRank determineHandRank(List<Card> hand) {
         sortHand(hand);
         // is it a straight?
-        if ((hand.get(2).getCardValue().compareTo(hand.get(1).getCardValue()) == 1) &&
-            (hand.get(1).getCardValue().compareTo(hand.get(0).getCardValue()) == 1)) {
+        if (((hand.get(2).getCardValue().compareTo(hand.get(1).getCardValue()) == 1) &&
+            (hand.get(1).getCardValue().compareTo(hand.get(0).getCardValue()) == 1)) ||
+        ((hand.get(2).getCardValue().equals(CardValue.ACE)) &&
+                (hand.get(1).getCardValue().equals(CardValue.THREE)) &&
+                (hand.get(0).getCardValue().equals(CardValue.TWO)))){
             // if yes, is it a straight flush? -> if yes, STRAIGHTFLUSH
             if (hand.get(0).getSuit().equals(hand.get(1).getSuit()) &&
                 hand.get(1).getSuit().equals(hand.get(2).getSuit())) {
@@ -163,10 +169,9 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
             // if no, STRAIGHT
             return HandRank.STRAIGHT;
         }
-        // TODO look for A-2-3 straight flush or straight
         // is it three of a kind? -> if yes, THREEOFAKIND
-        if (hand.get(0).getCardValue() == hand.get(1).getCardValue() &&
-            hand.get(1).getCardValue() == hand.get(2).getCardValue()) {
+        if (hand.get(0).getCardValue().equals(hand.get(1).getCardValue()) &&
+            hand.get(1).getCardValue().equals(hand.get(2).getCardValue())) {
             return HandRank.THREEOFAKIND;
         }
         // is it a flush? -> if yes, FLUSH
@@ -175,8 +180,8 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
             return HandRank.FLUSH;
         }
         // is it one pair? -> if yes
-        if (hand.get(0).getCardValue() == hand.get(1).getCardValue() ||
-                hand.get(1).getCardValue() == hand.get(2).getCardValue()) {
+        if (hand.get(0).getCardValue().equals(hand.get(1).getCardValue())  ||
+                hand.get(1).getCardValue().equals(hand.get(2).getCardValue())) {
             return HandRank.ONEPAIR;
         }
         return HandRank.HIGHCARD;
