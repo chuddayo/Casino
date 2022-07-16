@@ -21,7 +21,6 @@ public class TicTacToe implements GameInterface {
 
     @Override
     public void beginGame() {
-        Scanner scanner = new Scanner(System.in);
 
         String[][] demo = {{"1", "2", "3"}, {"4", "5", "6"}, {"7", "8", "9"}};
 
@@ -30,7 +29,7 @@ public class TicTacToe implements GameInterface {
         displayUI(demo);
 
         while (true) {
-            userPlay(userInterface, scanner);
+            userPlay(userInterface);
             if (isRoundComplete(userInterface)){
                 break;
             }
@@ -42,14 +41,9 @@ public class TicTacToe implements GameInterface {
             }
             displayUI(userInterface);
         }
-        //scanner.close();
+
     }
 public TicTacToe(HashSet< TicTacToePlayer > TicTacToePlayer) {this.players = TicTacToePlayer;}
-
-//    public static void main(String[] args) {
-//
-//
-//    }
 
 
     private boolean isRoundComplete(String[][] userInterface) {
@@ -109,10 +103,9 @@ public TicTacToe(HashSet< TicTacToePlayer > TicTacToePlayer) {this.players = Tic
         System.out.println("Computer played " + computerMove);
         playerMove(board, Integer.toString(computerMove), "O");
     }
-    private void userPlay (String[][] userInterface, Scanner scanner) {
+    private void userPlay (String[][] userInterface) {
         String userInput;
         while (true) {
-            //System.out.println("Where would you like to play? (1-9)");
             userInput = console.getStringInput("Where would you like to play? (1-9)");
             if (isValidPlay(userInterface, userInput)){
                 break;
