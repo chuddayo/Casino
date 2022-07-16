@@ -20,9 +20,9 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
         this.dealerHand = new ArrayList<>();
     }
 
-    public HashSet<ThreeCardPokerPlayer> getPlayerSet() {
-        return playerSet;
-    }
+//    public HashSet<ThreeCardPokerPlayer> getPlayerSet() {
+//        return playerSet;
+//    }
 
     public List<Card> dealHand() {
         List<Card> threeCardHand = new ArrayList<>();
@@ -36,6 +36,7 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
         for (Card card : hand) {
             deck.discard(card);
         }
+        hand.clear();
     }
 
     public StringBuilder flipAllCards() {
@@ -66,14 +67,16 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
             /*  for each player:
                     place ante or return to lobby
                     remove from playerSet if they leave game */
+            HashSet<ThreeCardPokerPlayer> removePlayers = new HashSet<>();
             for (ThreeCardPokerPlayer player : playerSet) {
-                int playerInput = console.getIntegerInput(": (1) Place Ante  (2) Return to Lobby");
+                int playerInput = console.getIntegerInput(player.getPlayerName() + " : (1) Place Ante  (2) Return to Lobby");
                 if (playerInput == 1) {
                     player.getPlayerAccount().deductBalance(ante);
                 } else if (playerInput == 2) {
-                    playerSet.remove(player);
+                    removePlayers.add(player);
                 }
             }
+            playerSet.removeAll(removePlayers);
             if (playerSet.isEmpty()) break; // exit game
 
             // deal the dealer in and all players remaining who have anted
@@ -82,7 +85,7 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
                 player.setPlayerHand(dealHand());
             }
 
-            // TODO show each player their hand and ask for bet
+            // TODO show each player their hand and ask for PLAY bet
             //    flag players as folded if they don't place further bet
 
             // determine rank of all hands still in
@@ -98,7 +101,11 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
                 payout(winner.getAccount(), 10);
             }
 
-            // TODO discard all hands
+            // TODO write discard tests, convert to cleanup method?
+            discardHand(dealerHand);
+            for (ThreeCardPokerPlayer player : playerSet) {
+                discardHand(player.getPlayerHand());
+            }
             deck.shuffle();
         }
     }
@@ -106,19 +113,68 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
     public HashSet<ThreeCardPokerPlayer> decideWinners(HashSet<ThreeCardPokerPlayer> potentialWinners) {
         HashSet<ThreeCardPokerPlayer> winners = new HashSet<>();
         for (ThreeCardPokerPlayer potential : potentialWinners) {
-            if (potential.getPlayerHandRank().compareTo(dealerHandRank) > 0) {
+            int relativeHandValue = potential.getPlayerHandRank().compareTo(dealerHandRank);
+            // if player handrank is higher than dealer
+            if (relativeHandValue > 0) {
                 winners.add(potential);
+            // if the player and dealer have the same rank, we look closer at the card values
+            } else if (relativeHandValue == 0) {
+
+                if (potential.getPlayerHandRank().equals(HandRank.STRAIGHTFLUSH) ||
+                        potential.getPlayerHandRank().equals(HandRank.STRAIGHT)) {
+                    // re-ordering if player has 2 3 A
+                    if (potential.getPlayerHand().get(2).getCardValue().equals(CardValue.ACE) &&
+                            potential.getPlayerHand().get(1).getCardValue().equals(CardValue.THREE)) {
+                        potential.setPlayerHand(sortAceTwoThreeStraight(potential.getPlayerHand()));
+                    }
+                    // re-order if dealer has 2 3 A
+                    if (getDealerHand().get(2).getCardValue().equals(CardValue.ACE) &&
+                            getDealerHand().get(1).getCardValue().equals(CardValue.THREE)) {
+                        setDealerHand(sortAceTwoThreeStraight(getDealerHand()));
+                    }
+                    if (potential.getPlayerHand().get(2).getCardValue().compareTo(dealerHand.get(2).getCardValue()) > 0) {
+                        winners.add(potential);
+                    }
+
+                } else if (potential.getPlayerHandRank().equals(HandRank.THREEOFAKIND)) {
+                    if (potential.getPlayerHand().get(2).getCardValue().compareTo(dealerHand.get(2).getCardValue()) > 0) {
+                        winners.add(potential);
+                    }
+                } else if (potential.getPlayerHandRank().equals(HandRank.FLUSH) ||
+                        potential.getPlayerHandRank().equals(HandRank.HIGHCARD) ||
+                        potential.getPlayerHandRank().equals(HandRank.ONEPAIR)) {
+
+                    // if we're talking about two ONEPAIR hands, we'll do some special sorting to make comparison easier
+                    if (potential.getPlayerHandRank().equals(HandRank.ONEPAIR)) {
+                        dealerHand = pushOnePairHand(dealerHand);
+                        potential.setPlayerHand(pushOnePairHand(potential.getPlayerHand()));
+                    }
+                    // compare cards one at a time highest to lowest, or the paired cards then the third card
+                    relativeHandValue = potential.getPlayerHand().get(2).getCardValue().compareTo(dealerHand.get(2).getCardValue());
+                    if (relativeHandValue > 0) winners.add(potential);
+                    else if (relativeHandValue == 0) {
+                        relativeHandValue = potential.getPlayerHand().get(1).getCardValue().compareTo(dealerHand.get(1).getCardValue());
+                        if (relativeHandValue > 0) winners.add(potential);
+                        else if (relativeHandValue == 0) {
+                            if (potential.getPlayerHand().get(0).getCardValue().compareTo(dealerHand.get(0).getCardValue()) > 0) {
+                                winners.add(potential);
+                            }
+                        }
+                    }
+                }
             }
         }
         return winners;
     }
 
     public HandRank determineHandRank(List<Card> hand) {
-        HandRank handRank;
         sortHand(hand);
         // is it a straight?
-        if ((hand.get(2).getCardValue().compareTo(hand.get(1).getCardValue()) == 1) &&
-            (hand.get(1).getCardValue().compareTo(hand.get(0).getCardValue()) == 1)) {
+        if (((hand.get(2).getCardValue().compareTo(hand.get(1).getCardValue()) == 1) &&
+            (hand.get(1).getCardValue().compareTo(hand.get(0).getCardValue()) == 1)) ||
+        ((hand.get(2).getCardValue().equals(CardValue.ACE)) &&
+                (hand.get(1).getCardValue().equals(CardValue.THREE)) &&
+                (hand.get(0).getCardValue().equals(CardValue.TWO)))){
             // if yes, is it a straight flush? -> if yes, STRAIGHTFLUSH
             if (hand.get(0).getSuit().equals(hand.get(1).getSuit()) &&
                 hand.get(1).getSuit().equals(hand.get(2).getSuit())) {
@@ -127,10 +183,9 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
             // if no, STRAIGHT
             return HandRank.STRAIGHT;
         }
-        // TODO look for A-2-3 straight flush or straight
         // is it three of a kind? -> if yes, THREEOFAKIND
-        if (hand.get(0).getCardValue() == hand.get(1).getCardValue() &&
-            hand.get(1).getCardValue() == hand.get(2).getCardValue()) {
+        if (hand.get(0).getCardValue().equals(hand.get(1).getCardValue()) &&
+            hand.get(1).getCardValue().equals(hand.get(2).getCardValue())) {
             return HandRank.THREEOFAKIND;
         }
         // is it a flush? -> if yes, FLUSH
@@ -139,8 +194,8 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
             return HandRank.FLUSH;
         }
         // is it one pair? -> if yes
-        if (hand.get(0).getCardValue() == hand.get(1).getCardValue() ||
-                hand.get(1).getCardValue() == hand.get(2).getCardValue()) {
+        if (hand.get(0).getCardValue().equals(hand.get(1).getCardValue())  ||
+                hand.get(1).getCardValue().equals(hand.get(2).getCardValue())) {
             return HandRank.ONEPAIR;
         }
         return HandRank.HIGHCARD;
@@ -149,6 +204,31 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
     public void sortHand(List<Card> hand) {
         Comparator<Card> byCardValue = Card::compareTo;
         hand.sort(byCardValue);
+    }
+
+    public List<Card> sortAceTwoThreeStraight(List<Card> hand) { // TODO write tests
+        // assuming hand currently 2 3 A
+        List<Card> threeHighStraight = new ArrayList<>();
+        threeHighStraight.add(hand.get(2));
+        threeHighStraight.add(hand.get(0));
+        threeHighStraight.add(hand.get(1));
+        return threeHighStraight;
+    }
+
+    public List<Card> pushOnePairHand(List<Card> hand) {
+        List<Card> sortedPairHand = new ArrayList<>();
+        if (hand.get(0).getCardValue().compareTo(hand.get(1).getCardValue()) == 0) {
+            sortedPairHand.add(hand.get(2));
+            sortedPairHand.add(hand.get(1));
+            sortedPairHand.add(hand.get(0));
+        } else if (hand.get(0).getCardValue().compareTo(hand.get(2).getCardValue()) == 0) {
+            sortedPairHand.add(hand.get(1));
+            sortedPairHand.add(hand.get(0));
+            sortedPairHand.add(hand.get(2));
+        } else if (hand.get(1).getCardValue().compareTo(hand.get(2).getCardValue()) == 0) {
+            return hand;
+        }
+        return sortedPairHand;
     }
 
     @Override
@@ -161,8 +241,7 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
 
     @Override
     public HashSet<Player> decideWinner(HashSet<Player> players) {
-        // if playerHand <= dealerHand, remove player from players
-        // prob need an enum for hand ranks?
+        // TODO remove from interface?
         return null;
     }
 
@@ -170,5 +249,21 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
     public void payout(Account account, int payoutAmount) {
         account.addBalance(payoutAmount);
         System.out.println("Paid $" + payoutAmount + " to " + account.getUserName() + "'s account!");
+    }
+
+    public List<Card> getDealerHand() {
+        return dealerHand;
+    }
+
+    public void setDealerHand(List<Card> dealerHand) {
+        this.dealerHand = dealerHand;
+    }
+
+    public HandRank getDealerHandRank() {
+        return dealerHandRank;
+    }
+
+    public void setDealerHandRank(HandRank dealerHandRank) {
+        this.dealerHandRank = dealerHandRank;
     }
 }
