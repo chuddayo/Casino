@@ -1,2 +1,0 @@
-steven,hi,1000
-linda,li,1000
