@@ -3,6 +3,7 @@ package com.github.zipcodewilmington.casino.games.roulette;
 import com.github.zipcodewilmington.casino.Account;
 import com.github.zipcodewilmington.casino.MultiplayerGamblingGame;
 import com.github.zipcodewilmington.casino.Player;
+import com.github.zipcodewilmington.casino.games.cardgames.ThreeCardPokerPlayer;
 import com.github.zipcodewilmington.casino.games.roulette.typeofbet.OddOrEven;
 import com.github.zipcodewilmington.casino.games.roulette.typeofbet.RedOrBlack;
 import com.github.zipcodewilmington.casino.games.roulette.typeofbet.StreetBet;
@@ -12,6 +13,12 @@ import java.util.HashSet;
 
 
 public class Roulette implements MultiplayerGamblingGame {
+    private  RoulettePlayer player;
+    private final WheelSpin myWheel;
+    public Roulette (RoulettePlayer player) {
+        this.player = player;
+        myWheel = new WheelSpin();
+    }
 
 
     private final String R = "Roulette";
@@ -21,19 +28,13 @@ public class Roulette implements MultiplayerGamblingGame {
             new StreetBet("Three in a Row", 11)
     };
 
-    private final WheelSpin myWheel;
-
-    public Roulette() {
-        myWheel = new WheelSpin();
-
-    }
 
     public String getAccount() {
         return null;
     }
 
     public void play(Account account) {
-        int amount = IOConsoleReader.promptRange("How much would you like to bet?", 0, Account.getBalance());
+        int amount = IOConsoleReader.promptRange("How much would you like to bet?", 0, account.getBalance());
                                                                                     //will need to get right method
         Bet bet = promptForBet();
         bet.place();
