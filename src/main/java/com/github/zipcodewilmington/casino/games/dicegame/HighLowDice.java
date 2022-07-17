@@ -11,10 +11,10 @@ import java.util.Scanner;
 
 public class HighLowDice implements MultiplayerGamblingGame {
 
-    private final IOConsole console = new IOConsole(AnsiColor.PURPLE);
     private HashSet<HighLowDicePlayer> players;
     private final Scanner scan = new Scanner(System.in);
     private final DiceSet dicePair = new DiceSet(2);
+    private final AnsiColor color = AnsiColor.MAGENTA;
     private String winningBet;
 
     public HighLowDice(HashSet<HighLowDicePlayer> players) {
@@ -23,21 +23,16 @@ public class HighLowDice implements MultiplayerGamblingGame {
 
     @Override
     public void beginGame() {
-        System.out.println(printInstructions());
+        print(printInstructions());
         while (true) {
             for (HighLowDicePlayer player : players) {
                 String username = player.getAccount().getUserName();
-                // int betAmount = console.getIntegerInput("Hi player " + username + "! Please enter the number of tokens you wish to wager:");
-                // player.placeBet(betAmount);
-                // String bet = console.getStringInput("Hi player " + username + "! Please place your bet selection (high, low, or seven):").toLowerCase();
-                // player.bet(bet);
+                print("Your current balance is " + player.getAccount().getBalance() + "\n");
                 int betAmount = printAndScanInt("Hi player " + username + "! Please enter the number of tokens you wish to wager");
                 player.placeBet(betAmount);
-                scan.nextLine();
                 while (player.getBetAmount() == -1) {
                     betAmount = printAndScanInt("Invalid bet amount! Sorry player " + username + ", please re-enter the number of tokens you wish to wager");
                     player.placeBet(betAmount);
-                    scan.nextLine();
                 }
                 String bet = printAndScanStr("Hi player " + username + "! Please place your bet selection (high, low or seven)").toLowerCase();
                 player.bet(bet);
@@ -55,23 +50,24 @@ public class HighLowDice implements MultiplayerGamblingGame {
 
     public void getWinningBet() {
         int roll = this.dicePair.tossAndSum();
-        System.out.println(this.dicePair.getDiceArt());
-        System.out.println("The dice roll is: " + roll + "!");
+        print(this.dicePair.getDiceArt() + "\n");
+        print("The dice roll is: " + roll + "!\n");
         if (roll < 7) this.winningBet = "low";
         else if (roll > 7) this.winningBet = "high";
         else this.winningBet = "seven";
-        System.out.println("The winning bet is: " + this.winningBet + "!");
+        print("The winning bet is: " + this.winningBet + "!\n");
     }
 
     public void payout() {
         for (HighLowDicePlayer player : players) {
             if (player.getBet().equals(this.winningBet)) {
-                System.out.println("Congratulations player " + player.getAccount().getUserName() + " on winning " + player.getBetAmount() + " tokens! Yay!!! :)");
+                print("Congratulations player " + player.getAccount().getUserName() + " on winning " + player.getBetAmount() + " tokens! Yay!!! :)\n");
                 player.getAccount().addBalance(player.getBetAmount());
             } else {
-                System.out.println("RIP player " + player.getAccount().getUserName() + " unfortunately you lost " + player.getBetAmount() + " tokens! :(");
+                print("RIP player " + player.getAccount().getUserName() + " unfortunately you lost " + player.getBetAmount() + " tokens! :(\n");
                 player.getAccount().deductBalance(player.getBetAmount());
             }
+            print(player.getAccount().getUserName() + ", your new balance is " + player.getAccount().getBalance() + "\n");
         }
     }
 
@@ -94,13 +90,23 @@ public class HighLowDice implements MultiplayerGamblingGame {
     }
 
     public String printAndScanStr(String s) {
-        System.out.print(s + ": ");
+        System.out.format(color.getColor() + s + ": ");
         return scan.nextLine();
     }
 
+    public void print(String s) {
+        System.out.format(color.getColor() + s);
+    }
+
     public int printAndScanInt(String s) {
-        System.out.print(s + ": ");
-        return scan.nextInt();
+        System.out.format(color.getColor() + s + ": ");
+        String str = scan.nextLine();
+        try {
+            return Integer.parseInt(str);
+        }
+        catch (NumberFormatException ex) {
+        }
+        return -1;
     }
 
     @Override
