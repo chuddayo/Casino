@@ -1,4 +1,0 @@
-Ryan,ok,1985
-Kyle,ok,1000
-Eric,ok,1008
-Linda,ok,1020
