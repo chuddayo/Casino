@@ -27,8 +27,10 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
                 System.out.println("Too many players, returning to lobby."); // TODO sleep here?
                 break;
             }
-            /*  for each player:  place ante or return to lobby
-                                  remove from playerSet if they leave game */
+
+            // *************************
+            //           ANTE
+            // *************************
             HashSet<ThreeCardPokerPlayer> removePlayers = new HashSet<>();
             for (ThreeCardPokerPlayer player : playerSet) {
                 int playerInput;
@@ -39,6 +41,7 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
                         int ante = console.getIntegerInput("\nHow many tokens would you like to ante?");
                         player.placeBet(ante);
                         player.getPlayerAccount().deductBalance(ante);
+                        // TODO add Pair Plus bet
                     } else if (playerInput == 2) {
                         removePlayers.add(player);
                     }
@@ -47,20 +50,23 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
             playerSet.removeAll(removePlayers);
             if (playerSet.isEmpty()) break; // exit game
 
-            // deal the dealer in and all players remaining who have anted
+            // *************************
+            //           DEAL
+            // *************************
             dealerHand = dealHand();
             for (ThreeCardPokerPlayer player : playerSet) {
                 player.setPlayerHand(dealHand());
             }
 
-            // each player get's asked to proceed and double their bet
-            // if they choose to play on, they are added to showdownPlayers
+            // *************************
+            //         DECISION
+            // *************************
             HashSet<ThreeCardPokerPlayer> showdownPlayers = new HashSet<>();
             for (ThreeCardPokerPlayer player : playerSet) {
                 // dispay hand
                 player.setPlayerHandRank(determineHandRank(player.getPlayerHand()));
                 System.out.println("\n * * " + player.getPlayerName() + "'s Hand * *");
-                System.out.println(player.getPlayerHand());
+                System.out.println(player.getPlayerHand()); // TODO better card display
                 System.out.println(player.getPlayerHandRank() + "\n");
                 // ask to add play bet or fold
                 String userInput;
@@ -101,7 +107,7 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
                         payout(winner.getAccount(), winner.getAnte() * 3);
                     }
                 }
-
+                // TODO payout pair plus bets
             } else {
                 System.out.println("\nAll players folded and conceded their ante bets.\n");
             }
@@ -271,9 +277,13 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
 
     @Override
     public String printInstructions() {
-        return "\n-------------------------------------\n" +
-                 "---- Welcome to Three Card Poker ----\n" +
-                 "-------------------------------------";
+        return  " _________   ___   ___   ______    ______   ______       ______   ________   ______    ______     \n" +
+                "/________/\\ /__/\\ /__/\\ /_____/\\  /_____/\\ /_____/\\     /_____/\\ /_______/\\ /_____/\\  /_____/\\    \n" +
+                "\\__.::.__\\/ \\::\\ \\\\  \\ \\\\:::_ \\ \\ \\::::_\\/_\\::::_\\/_    \\:::__\\/ \\::: _  \\ \\\\:::_ \\ \\ \\:::_ \\ \\   \n" +
+                "   \\::\\ \\    \\::\\/_\\ .\\ \\\\:(_) ) )_\\:\\/___/\\\\:\\/___/\\    \\:\\ \\  __\\::(_)  \\ \\\\:(_) ) )_\\:\\ \\ \\ \\  \n" +
+                "    \\::\\ \\    \\:: ___::\\ \\\\: __ `\\ \\\\::___\\/_\\::___\\/_    \\:\\ \\/_/\\\\:: __  \\ \\\\: __ `\\ \\\\:\\ \\ \\ \\ \n" +
+                "     \\::\\ \\    \\: \\ \\\\::\\ \\\\ \\ `\\ \\ \\\\:\\___/ \\\\:\\___/ \\    \\:\\_\\ \\ \\\\:.\\ \\  \\ \\\\ \\ `\\ \\ \\\\:\\/ :| |\n" +
+                "      \\__\\/     \\__\\/ \\::\\/ \\_\\/ \\_\\/ \\_____\\/ \\_____\\/     \\_____\\/ \\__\\/\\__\\/ \\_\\/ \\_\\/ \\____/_/";
     }
 
     @Override
