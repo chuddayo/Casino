@@ -6,7 +6,6 @@ import com.github.zipcodewilmington.casino.games.cardgames.ThreeCardPokerPlayer;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -127,6 +126,23 @@ public class ThreeCardPokerGameTest {
 
         newGame.sortHand(hand);
         Assert.assertEquals(expectedHand, hand);
+    }
+    @Test
+    public void discardHandTest1() {
+        newGame = new ThreeCardPokerGame(playerSet);
+        Assert.assertEquals(52, newGame.getDeck().size());
+
+        Card card1 = new Card(queen, diamonds);
+        Card card2 = new Card(king, spades);
+        Card card3 = new Card(queen, clubs);
+        List<Card> hand = new ArrayList<>();
+        hand.add(card1);
+        hand.add(card2);
+        hand.add(card3);
+
+        newGame.discardHand(hand);
+
+        Assert.assertEquals(55, newGame.getDeck().size());
     }
     @Test
     public void pushOnePairHandTest1() {
@@ -508,7 +524,6 @@ public class ThreeCardPokerGameTest {
 
         Assert.assertEquals(0, expectedWinners.size());
     }
-
     @Test
     public void determineWinnerTest5() {
         // player to win with 876 high straight over dealer's A23
