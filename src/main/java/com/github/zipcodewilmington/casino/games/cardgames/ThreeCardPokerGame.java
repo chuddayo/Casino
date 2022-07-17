@@ -20,42 +20,6 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
         this.dealerHand = new ArrayList<>();
     }
 
-//    public HashSet<ThreeCardPokerPlayer> getPlayerSet() {
-//        return playerSet;
-//    }
-
-    public List<Card> dealHand() {
-        List<Card> threeCardHand = new ArrayList<>();
-        threeCardHand.add(deck.dealTop());
-        threeCardHand.add(deck.dealTop());
-        threeCardHand.add(deck.dealTop());
-        return threeCardHand;
-    }
-
-    public void discardHand(List<Card> hand) {
-        for (Card card : hand) {
-            deck.discard(card);
-        }
-        hand.clear();
-    }
-
-    public StringBuilder flipAllCards() {
-        StringBuilder allCards = new StringBuilder(" * * Dealer's Hand * *\n");
-        allCards.append(dealerHandRank).append("\n");
-        for(Card card : dealerHand) {
-            allCards.append(card).append("\n");
-        }
-        for(ThreeCardPokerPlayer player : playerSet) {
-            allCards.append(" * * ").append(player.getPlayerName()).append("'s Hand * *\n");
-            allCards.append(player.getPlayerHandRank()).append("\n");
-            for(Card card : player.getPlayerHand()) {
-                allCards.append(card).append("\n");
-            }
-        }
-
-        return allCards;
-    }
-
     @Override
     public void beginGame() {
         System.out.println(printInstructions());
@@ -101,13 +65,45 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
                 payout(winner.getAccount(), 10);
             }
 
-            // TODO write discard tests, convert to cleanup method?
+            // CLEANUP : discard hands back into deck, shuffle deck
             discardHand(dealerHand);
             for (ThreeCardPokerPlayer player : playerSet) {
                 discardHand(player.getPlayerHand());
             }
             deck.shuffle();
         }
+    }
+
+    public List<Card> dealHand() {
+        List<Card> threeCardHand = new ArrayList<>();
+        threeCardHand.add(deck.dealTop());
+        threeCardHand.add(deck.dealTop());
+        threeCardHand.add(deck.dealTop());
+        return threeCardHand;
+    }
+
+    public void discardHand(List<Card> hand) {
+        for (Card card : hand) {
+            deck.discard(card);
+        }
+        hand.clear();
+    }
+
+    public StringBuilder flipAllCards() {
+        StringBuilder allCards = new StringBuilder(" * * Dealer's Hand * *\n");
+        allCards.append(dealerHandRank).append("\n");
+        for(Card card : dealerHand) {
+            allCards.append(card).append("\n");
+        }
+        for(ThreeCardPokerPlayer player : playerSet) {
+            allCards.append(" * * ").append(player.getPlayerName()).append("'s Hand * *\n");
+            allCards.append(player.getPlayerHandRank()).append("\n");
+            for(Card card : player.getPlayerHand()) {
+                allCards.append(card).append("\n");
+            }
+        }
+
+        return allCards;
     }
 
     public HashSet<ThreeCardPokerPlayer> decideWinners(HashSet<ThreeCardPokerPlayer> potentialWinners) {
@@ -265,5 +261,13 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
 
     public void setDealerHandRank(HandRank dealerHandRank) {
         this.dealerHandRank = dealerHandRank;
+    }
+
+    public Deck getDeck() {
+        return deck;
+    }
+
+    public void setDeck(Deck deck) {
+        this.deck = deck;
     }
 }
