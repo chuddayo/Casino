@@ -11,8 +11,6 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
     private HashSet<ThreeCardPokerPlayer> playerSet;
     private List<Card> dealerHand;
     private HandRank dealerHandRank;
-    private final int ante = 5;
-    private final int betAmt = 20;
 
     public ThreeCardPokerGame(HashSet<ThreeCardPokerPlayer> playerSet) {
         this.deck = new Deck();
@@ -25,16 +23,17 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
         System.out.println(printInstructions());
         while (true) {
             if (playerSet.size() > 6) {
-                System.out.println("Too many players, returning to lobby.");
+                System.out.println("Too many players, returning to lobby."); // TODO sleep here?
                 break;
             }
-            /*  for each player:
-                    place ante or return to lobby
-                    remove from playerSet if they leave game */
+            /*  for each player:  place ante or return to lobby
+                                  remove from playerSet if they leave game */
             HashSet<ThreeCardPokerPlayer> removePlayers = new HashSet<>();
             for (ThreeCardPokerPlayer player : playerSet) {
                 int playerInput = console.getIntegerInput(player.getPlayerName() + " : (1) Place Ante  (2) Return to Lobby");
                 if (playerInput == 1) {
+                    int ante = console.getIntegerInput("How many tokens would you like to ante?");
+                    player.placeBet(ante);
                     player.getPlayerAccount().deductBalance(ante);
                 } else if (playerInput == 2) {
                     removePlayers.add(player);
@@ -62,7 +61,7 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
 
             System.out.println(flipAllCards()); // TODO more display based on hand results and payouts
             for (ThreeCardPokerPlayer winner : winners) {
-                payout(winner.getAccount(), 10);
+                payout(winner.getAccount(), winner.getAnte() * 2);
             }
 
             // CLEANUP : discard hands back into deck, shuffle deck
@@ -231,8 +230,7 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
     public String printInstructions() {
         return "-------------------------------------\n" +
                "---- Welcome to Three Card Poker ----\n" +
-               "-------------------------------------\n" +
-               "Place an ante of 5 to see if you win \n";
+               "-------------------------------------\n";
     }
 
     @Override
@@ -244,7 +242,7 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
     @Override
     public void payout(Account account, int payoutAmount) {
         account.addBalance(payoutAmount);
-        System.out.println("Paid $" + payoutAmount + " to " + account.getUserName() + "'s account!");
+        System.out.println("Paid " + payoutAmount + " tokens to " + account.getUserName() + "'s account!");
     }
 
     public List<Card> getDealerHand() {

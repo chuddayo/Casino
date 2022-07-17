@@ -203,6 +203,9 @@ public class Casino {
                             String usernameToLogout = console.getStringInput("Username to logout:");
                             String passwordToLogout = console.getStringInput("Password to logout:");
                             loggedInAccounts.remove(accountManager.getAccount(usernameToLogout, passwordToLogout));
+                        } else {
+                            System.out.println("No one is logged in.");
+                            // TODO add sleep here?
                         }
                         break;
                 }
