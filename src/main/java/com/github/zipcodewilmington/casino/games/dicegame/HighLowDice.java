@@ -1,4 +1,4 @@
-package com.github.zipcodewilmington.casino.games.dicegames;
+package com.github.zipcodewilmington.casino.games.dicegame;
 
 import com.github.zipcodewilmington.casino.Account;
 import com.github.zipcodewilmington.casino.MultiplayerGamblingGame;
@@ -14,7 +14,7 @@ public class HighLowDice implements MultiplayerGamblingGame {
     private final IOConsole console = new IOConsole(AnsiColor.PURPLE);
     private HashSet<HighLowDicePlayer> players;
     private final Scanner scan = new Scanner(System.in);
-    private final Dice dice = new Dice(2);
+    private final DiceSet dicePair = new DiceSet(2);
     private String winningBet;
 
     public HighLowDice(HashSet<HighLowDicePlayer> players) {
@@ -24,36 +24,38 @@ public class HighLowDice implements MultiplayerGamblingGame {
     @Override
     public void beginGame() {
         System.out.println(printInstructions());
-        for (HighLowDicePlayer player : players) {
-            String username = player.getAccount().getUserName();
-            int betAmount = console.getIntegerInput("Hi player " + username + "! Please enter the number of tokens you wish to wager");
-
-
-            /*
-            int betAmount = printAndScanInt("Hi player " + username + "! Please enter the number of tokens you wish to wager");
-            player.placeBet(betAmount);
-            scan.nextLine();
-            String bet = printAndScanStr("Hi player " + username + "! Please place your bet selection (high, low or seven)").toLowerCase();
-            player.bet(bet);
-            while (player.getBetAmount() == -1 || player.getBet() == "invalid") {
-                if (player.getBetAmount() == -1) {
-                    betAmount = printAndScanInt("Invalid bet amount! Sorry player " + username + ", please re-input the number of tokens you would like to wager");
+        while (true) {
+            for (HighLowDicePlayer player : players) {
+                String username = player.getAccount().getUserName();
+                // int betAmount = console.getIntegerInput("Hi player " + username + "! Please enter the number of tokens you wish to wager:");
+                // player.placeBet(betAmount);
+                // String bet = console.getStringInput("Hi player " + username + "! Please place your bet selection (high, low, or seven):").toLowerCase();
+                // player.bet(bet);
+                int betAmount = printAndScanInt("Hi player " + username + "! Please enter the number of tokens you wish to wager");
+                player.placeBet(betAmount);
+                scan.nextLine();
+                while (player.getBetAmount() == -1) {
+                    betAmount = printAndScanInt("Invalid bet amount! Sorry player " + username + ", please re-enter the number of tokens you wish to wager");
                     player.placeBet(betAmount);
                     scan.nextLine();
                 }
-                if (player.getBet() == "invalid") {
-                    bet = printAndScanStr("Invalid bet selection! Sorry player " + username + ", please re-place your bet selection (high, low or seven)").toLowerCase();
+                String bet = printAndScanStr("Hi player " + username + "! Please place your bet selection (high, low or seven)").toLowerCase();
+                player.bet(bet);
+                while (player.getBet() == "invalid") {
+                    bet = printAndScanStr("Invalid bet selection! Sorry player " + username + ", please re-enter your bet selection (high, low or seven)").toLowerCase();
                     player.bet(bet);
                 }
             }
-             */
+            getWinningBet();
+            payout();
+            String input = printAndScanStr("The game has completed, would you like to play again? (yes or no)");
+            if (input.toLowerCase().equals("no")) break;
         }
-        getWinningBet();
-        payout();
     }
 
     public void getWinningBet() {
-        int roll = this.dice.tossAndSum();
+        int roll = this.dicePair.tossAndSum();
+        System.out.println(this.dicePair.getDiceArt());
         System.out.println("The dice roll is: " + roll + "!");
         if (roll < 7) this.winningBet = "low";
         else if (roll > 7) this.winningBet = "high";

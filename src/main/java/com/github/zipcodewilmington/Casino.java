@@ -6,8 +6,8 @@ import com.github.zipcodewilmington.casino.games.TicTacToe.TicTacToe;
 import com.github.zipcodewilmington.casino.games.TicTacToe.TicTacToePlayer;
 import com.github.zipcodewilmington.casino.games.cardgames.ThreeCardPokerGame;
 import com.github.zipcodewilmington.casino.games.cardgames.ThreeCardPokerPlayer;
-import com.github.zipcodewilmington.casino.games.dicegames.HighLowDice;
-import com.github.zipcodewilmington.casino.games.dicegames.HighLowDicePlayer;
+import com.github.zipcodewilmington.casino.games.dicegame.HighLowDice;
+import com.github.zipcodewilmington.casino.games.dicegame.HighLowDicePlayer;
 import com.github.zipcodewilmington.casino.games.slots.SlotsGame;
 import com.github.zipcodewilmington.casino.games.slots.SlotsPlayer;
 import com.github.zipcodewilmington.utils.AnsiColor;
@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.HashSet;
 
 public class Casino {
-    private final IOConsole console = new IOConsole(AnsiColor.BLUE);
+    private final IOConsole console = new IOConsole(AnsiColor.CYAN);
 
     public void run() throws IOException {
         String dashBoardInput;
