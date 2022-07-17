@@ -1,6 +1,9 @@
 package com.github.zipcodewilmington.casino.games.cardgames;
 
 import com.github.zipcodewilmington.casino.*;
+import com.github.zipcodewilmington.casino.games.cardutils.Card;
+import com.github.zipcodewilmington.casino.games.cardutils.HandRank;
+
 import java.util.List;
 
 public class ThreeCardPokerPlayer extends Player implements GamblingPlayer{

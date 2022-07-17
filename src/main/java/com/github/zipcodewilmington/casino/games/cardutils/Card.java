@@ -1,4 +1,4 @@
-package com.github.zipcodewilmington.casino;
+package com.github.zipcodewilmington.casino.games.cardutils;
 
 public class Card implements Comparable<Card> {
     private final Suit suit;

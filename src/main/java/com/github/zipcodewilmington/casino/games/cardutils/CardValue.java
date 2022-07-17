@@ -1,4 +1,4 @@
-package com.github.zipcodewilmington.casino;
+package com.github.zipcodewilmington.casino.games.cardutils;
 
 public enum CardValue {
     TWO(2),

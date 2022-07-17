@@ -1,6 +1,10 @@
 package com.github.zipcodewilmington.casino.games.cardgames;
 
 import com.github.zipcodewilmington.casino.*;
+import com.github.zipcodewilmington.casino.games.cardutils.Card;
+import com.github.zipcodewilmington.casino.games.cardutils.CardValue;
+import com.github.zipcodewilmington.casino.games.cardutils.Deck;
+import com.github.zipcodewilmington.casino.games.cardutils.HandRank;
 import com.github.zipcodewilmington.utils.AnsiColor;
 import com.github.zipcodewilmington.utils.IOConsole;
 import java.util.*;
