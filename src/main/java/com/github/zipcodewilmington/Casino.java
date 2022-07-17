@@ -197,9 +197,13 @@ public class Casino {
                     case "3":
                     case "LOGOUT":
                     case "L":
-                        String usernameToLogout = console.getStringInput("Username to logout:");
-                        String passwordToLogout = console.getStringInput("Password to logout:");
-                        loggedInAccounts.remove(accountManager.getAccount(usernameToLogout, passwordToLogout));
+                        if (loggedInAccounts.size() == 1) {
+                            loggedInAccounts.clear();
+                        } else if (loggedInAccounts.size() > 1) {
+                            String usernameToLogout = console.getStringInput("Username to logout:");
+                            String passwordToLogout = console.getStringInput("Password to logout:");
+                            loggedInAccounts.remove(accountManager.getAccount(usernameToLogout, passwordToLogout));
+                        }
                         break;
                 }
            } while (!"QUIT".equals(dashBoardInput));
