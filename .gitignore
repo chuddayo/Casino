@@ -22,7 +22,6 @@ local.properties
 *.launch
 
 *.txt
-
 # PyDev specific (Python IDE for Eclipse)
 *.pydevproject
 
