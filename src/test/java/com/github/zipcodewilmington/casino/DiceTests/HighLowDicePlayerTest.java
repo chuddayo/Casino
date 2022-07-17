@@ -1,9 +1,8 @@
 package com.github.zipcodewilmington.casino.DiceTests;
 
 import com.github.zipcodewilmington.casino.Account;
-import com.github.zipcodewilmington.casino.games.dicegames.HighLowDice;
-import com.github.zipcodewilmington.casino.games.dicegames.HighLowDicePlayer;
-import org.junit.Assert;
+import com.github.zipcodewilmington.casino.games.dicegame.HighLowDice;
+import com.github.zipcodewilmington.casino.games.dicegame.HighLowDicePlayer;
 import org.junit.Test;
 
 import java.util.HashSet;
