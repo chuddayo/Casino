@@ -88,6 +88,7 @@ public class Casino {
 
                                         if (account != null) {
                                             loggedInAccounts.add(account);
+                                            loginMore = false;
                                         } else {
                                             noAccountFound(accountPassword, accountName);
                                         }
@@ -124,6 +125,7 @@ public class Casino {
 
                                         if (account != null) {
                                             loggedInAccounts.add(account);
+                                            loginMore = false;
                                         } else {
                                             noAccountFound(accountPassword, accountName);
                                         }
