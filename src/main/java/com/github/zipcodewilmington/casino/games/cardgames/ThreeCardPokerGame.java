@@ -6,13 +6,12 @@ import com.github.zipcodewilmington.utils.IOConsole;
 import java.util.*;
 
 public class ThreeCardPokerGame implements MultiplayerGamblingGame {
-    private final IOConsole console = new IOConsole(AnsiColor.YELLOW);
+    private final AnsiColor color = AnsiColor.YELLOW;
+    private final IOConsole console = new IOConsole(color);
     private Deck deck;
     private HashSet<ThreeCardPokerPlayer> playerSet;
     private List<Card> dealerHand;
     private HandRank dealerHandRank;
-    private final int ante = 5;
-    private final int betAmt = 20;
 
     public ThreeCardPokerGame(HashSet<ThreeCardPokerPlayer> playerSet) {
         this.deck = new Deck();
@@ -22,50 +21,100 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
 
     @Override
     public void beginGame() {
-        System.out.println(printInstructions());
+        System.out.format(color.getColor() + printInstructions());
         while (true) {
             if (playerSet.size() > 6) {
-                System.out.println("Too many players, returning to lobby.");
+                System.out.println("Too many players, returning to lobby."); // TODO sleep here?
                 break;
             }
-            /*  for each player:
-                    place ante or return to lobby
-                    remove from playerSet if they leave game */
+
+            // *************************
+            //           ANTE
+            // *************************
             HashSet<ThreeCardPokerPlayer> removePlayers = new HashSet<>();
             for (ThreeCardPokerPlayer player : playerSet) {
-                int playerInput = console.getIntegerInput(player.getPlayerName() + " : (1) Place Ante  (2) Return to Lobby");
-                if (playerInput == 1) {
-                    player.getPlayerAccount().deductBalance(ante);
-                } else if (playerInput == 2) {
-                    removePlayers.add(player);
-                }
+                int playerInput;
+                do {
+                    System.out.println("\n" + player.getPlayerName() + " has " + player.getAccount().getBalance() + " tokens.");
+                    playerInput = console.getIntegerInput(player.getPlayerName() + " : (1) Place Ante  (2) Return to Lobby");
+                    if (playerInput == 1) {
+                        int ante = console.getIntegerInput("\nHow many tokens would you like to ante?");
+                        player.placeBet(ante);
+                        player.getPlayerAccount().deductBalance(ante);
+                        // TODO add Pair Plus bet
+                    } else if (playerInput == 2) {
+                        removePlayers.add(player);
+                    }
+                } while (playerInput != 1 && (playerInput != 2));
             }
             playerSet.removeAll(removePlayers);
             if (playerSet.isEmpty()) break; // exit game
 
-            // deal the dealer in and all players remaining who have anted
+            // *************************
+            //           DEAL
+            // *************************
             dealerHand = dealHand();
             for (ThreeCardPokerPlayer player : playerSet) {
                 player.setPlayerHand(dealHand());
             }
 
-            // TODO show each player their hand and ask for PLAY bet
-            //    flag players as folded if they don't place further bet
-
-            // determine rank of all hands still in
-            dealerHandRank = determineHandRank(dealerHand);
+            // *************************
+            //         DECISION
+            // *************************
+            HashSet<ThreeCardPokerPlayer> showdownPlayers = new HashSet<>();
             for (ThreeCardPokerPlayer player : playerSet) {
+                // dispay hand
                 player.setPlayerHandRank(determineHandRank(player.getPlayerHand()));
+                System.out.println("\n * * " + player.getPlayerName() + "'s Hand * *");
+                System.out.println(player.getPlayerHand()); // TODO better card display
+                System.out.println(player.getPlayerHandRank() + "\n");
+                // ask to add play bet or fold
+                String userInput;
+                do {
+                    userInput = console.getStringInput("(1) Play: betting " + player.getAnte() + " more tokens  (2) Fold");
+                    if (userInput.equals("1")) {
+                        player.getPlayerAccount().deductBalance(player.getAnte());
+                        showdownPlayers.add(player);
+                    }
+                } while (!userInput.equals("1") && !userInput.equals("2"));
             }
 
-            HashSet<ThreeCardPokerPlayer> winners = decideWinners(playerSet);
+            // *************************
+            //         SHOWDOWN
+            // *************************
+            if (!showdownPlayers.isEmpty()) {
+                // determine rank of dealer's hand
+                dealerHandRank = determineHandRank(dealerHand);
+                // show all showdown hands
+                System.out.println(flipAllCards(showdownPlayers)); // TODO better card display
 
-            System.out.println(flipAllCards()); // TODO more display based on hand results and payouts
-            for (ThreeCardPokerPlayer winner : winners) {
-                payout(winner.getAccount(), 10);
+                if (HandRank.HIGHCARD.compareTo(dealerHandRank) < 0 ||
+                dealerHand.get(2).getCardValue().compareTo(CardValue.JACK) > 0) {
+                    // decide who won if they went to showdown with dealer
+                    HashSet<ThreeCardPokerPlayer> winners = decideWinners(showdownPlayers);
+                    if (winners.isEmpty()) {
+                        System.out.println("Dealer's hand wins. All bets were lost.");
+                    }
+                    // payout winners 4 * ante for winning against dealer
+                    for (ThreeCardPokerPlayer winner : winners) {
+                        payout(winner.getAccount(), winner.getAnte() * 4);
+                    }
+                } else { // dealer's hand does not qualify
+                    // announce dealer's hand does not qualify
+                    System.out.println("The dealer's hand does not qualify.");
+                    // payout 3 * ante for all showdown players
+                    for (ThreeCardPokerPlayer winner : showdownPlayers) {
+                        payout(winner.getAccount(), winner.getAnte() * 3);
+                    }
+                }
+                // TODO payout pair plus bets
+            } else {
+                System.out.println("\nAll players folded and conceded their ante bets.\n");
             }
 
-            // CLEANUP : discard hands back into deck, shuffle deck
+            // *************************
+            //         CLEANUP
+            // *************************
             discardHand(dealerHand);
             for (ThreeCardPokerPlayer player : playerSet) {
                 discardHand(player.getPlayerHand());
@@ -89,20 +138,19 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
         hand.clear();
     }
 
-    public StringBuilder flipAllCards() {
-        StringBuilder allCards = new StringBuilder(" * * Dealer's Hand * *\n");
+    public StringBuilder flipAllCards(HashSet<ThreeCardPokerPlayer> showdownPlayers) {
+        StringBuilder allCards = new StringBuilder("\n * * Dealer's Hand * *\n");
         allCards.append(dealerHandRank).append("\n");
         for(Card card : dealerHand) {
             allCards.append(card).append("\n");
         }
-        for(ThreeCardPokerPlayer player : playerSet) {
+        for(ThreeCardPokerPlayer player : showdownPlayers) {
             allCards.append(" * * ").append(player.getPlayerName()).append("'s Hand * *\n");
             allCards.append(player.getPlayerHandRank()).append("\n");
             for(Card card : player.getPlayerHand()) {
                 allCards.append(card).append("\n");
             }
         }
-
         return allCards;
     }
 
@@ -229,10 +277,13 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
 
     @Override
     public String printInstructions() {
-        return "-------------------------------------\n" +
-               "---- Welcome to Three Card Poker ----\n" +
-               "-------------------------------------\n" +
-               "Place an ante of 5 to see if you win \n";
+        return  " _________   ___   ___   ______    ______   ______       ______   ________   ______    ______     \n" +
+                "/________/\\ /__/\\ /__/\\ /_____/\\  /_____/\\ /_____/\\     /_____/\\ /_______/\\ /_____/\\  /_____/\\    \n" +
+                "\\__.::.__\\/ \\::\\ \\\\  \\ \\\\:::_ \\ \\ \\::::_\\/_\\::::_\\/_    \\:::__\\/ \\::: _  \\ \\\\:::_ \\ \\ \\:::_ \\ \\   \n" +
+                "   \\::\\ \\    \\::\\/_\\ .\\ \\\\:(_) ) )_\\:\\/___/\\\\:\\/___/\\    \\:\\ \\  __\\::(_)  \\ \\\\:(_) ) )_\\:\\ \\ \\ \\  \n" +
+                "    \\::\\ \\    \\:: ___::\\ \\\\: __ `\\ \\\\::___\\/_\\::___\\/_    \\:\\ \\/_/\\\\:: __  \\ \\\\: __ `\\ \\\\:\\ \\ \\ \\ \n" +
+                "     \\::\\ \\    \\: \\ \\\\::\\ \\\\ \\ `\\ \\ \\\\:\\___/ \\\\:\\___/ \\    \\:\\_\\ \\ \\\\:.\\ \\  \\ \\\\ \\ `\\ \\ \\\\:\\/ :| |\n" +
+                "      \\__\\/     \\__\\/ \\::\\/ \\_\\/ \\_\\/ \\_____\\/ \\_____\\/     \\_____\\/ \\__\\/\\__\\/ \\_\\/ \\_\\/ \\____/_/";
     }
 
     @Override
@@ -244,7 +295,7 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
     @Override
     public void payout(Account account, int payoutAmount) {
         account.addBalance(payoutAmount);
-        System.out.println("Paid $" + payoutAmount + " to " + account.getUserName() + "'s account!");
+        System.out.println("Paid " + payoutAmount + " tokens to " + account.getUserName());
     }
 
     public List<Card> getDealerHand() {
@@ -265,9 +316,5 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
 
     public Deck getDeck() {
         return deck;
-    }
-
-    public void setDeck(Deck deck) {
-        this.deck = deck;
     }
 }

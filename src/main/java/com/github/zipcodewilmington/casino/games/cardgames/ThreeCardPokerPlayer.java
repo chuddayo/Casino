@@ -6,6 +6,7 @@ import java.util.List;
 public class ThreeCardPokerPlayer extends Player implements GamblingPlayer{
     private List<Card> playerHand;
     private HandRank playerHandRank;
+    private Integer ante;
 
     public ThreeCardPokerPlayer(Account account) {
         super(account);
@@ -37,8 +38,12 @@ public class ThreeCardPokerPlayer extends Player implements GamblingPlayer{
         this.playerHand = playerHand;
     }
 
+    public Integer getAnte() {
+        return ante;
+    }
+
     @Override
     public void placeBet(int amount) {
-        // TODO implement betting for 3 card poker
+        ante = amount;
     }
 }
