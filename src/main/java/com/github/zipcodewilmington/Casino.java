@@ -160,6 +160,9 @@ public class Casino {
                     break;
 
                 // TODO Cashier
+//                case "CHECK BALANCE":
+//                case "ADD BALANCE": or wallet ? hmmm...
+//                case "WITHDRAW BALANCE":
             }
         } while (!"QUIT".equalsIgnoreCase(dashBoardInput) && !"5".equals(dashBoardInput));
     }
