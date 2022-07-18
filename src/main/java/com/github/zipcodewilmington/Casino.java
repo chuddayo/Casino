@@ -8,11 +8,14 @@ import com.github.zipcodewilmington.casino.games.cardgames.ThreeCardPokerGame;
 import com.github.zipcodewilmington.casino.games.cardgames.ThreeCardPokerPlayer;
 import com.github.zipcodewilmington.casino.games.dicegame.HighLowDice;
 import com.github.zipcodewilmington.casino.games.dicegame.HighLowDicePlayer;
+import com.github.zipcodewilmington.casino.games.roulette.Roulette;
+import com.github.zipcodewilmington.casino.games.roulette.RoulettePlayer;
 import com.github.zipcodewilmington.casino.games.slots.SlotsGame;
 import com.github.zipcodewilmington.casino.games.slots.SlotsPlayer;
 import com.github.zipcodewilmington.utils.AnsiColor;
 import com.github.zipcodewilmington.utils.IOConsole;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashSet;
 
 public class Casino {
@@ -23,209 +26,177 @@ public class Casino {
         AccountManager accountManager = new AccountManager();
         HashSet<Account> loggedInAccounts = new HashSet<>();
         printVenetianBanner();
-        try {
-            do {
-               dashBoardInput = getDashboardInput().toUpperCase();
+        do {
+            dashBoardInput = getDashboardInput().toUpperCase();
 
-                switch (dashBoardInput) {
-                    case "CREATE ACCOUNT":
-                    case "1":
-                    case "CREATE":
-                    case "C": {
-                        do {
-                            console.println("Welcome to the account-creation screen.");
-                            String accountName = console.getStringInput("Enter your account name:");
-                            String accountPassword = console.getStringInput("Enter your account password:");
-                            if (accountManager.getAccountUsernames().contains(accountName)) {
-                                console.println("This username already exists.");
-                                break;
-                            } else {
-                                accountManager.createAccount(accountName, accountPassword);
-                                accountManager.updateAccounts();
-                                break;
-                            }
-                        } while(true);
-                        break;
-                    }
-                    case "SELECT GAME":
-                    case "2":
-                        String gameSelectionInput = getGameSelectionInput().toUpperCase();
-                        boolean loginMore = false;
-                        switch (gameSelectionInput) {
-                            case "SLOTS":
-                            case "1":
-                            {
-                                if (loggedInAccounts.size() > 1) {
-                                    System.out.println("Too many accounts returning to lobby..");
-                                    // TODO add sleep here?
-                                } else if (loggedInAccounts.size() == 0) {
-                                    String accountName = console.getStringInput("Enter your account name:");
-                                    String accountPassword = console.getStringInput("Enter your account password:");
-                                    Account account = accountManager.getAccount(accountName, accountPassword);
-                                    if (account != null) {
-                                        loggedInAccounts.add(account);
-                                        HashSet<SlotsPlayer> slotsPlayers = new HashSet<>();
-                                        SlotsPlayer slotsPlayer = new SlotsPlayer(account);
-                                        slotsPlayers.add(slotsPlayer);
-                                        SlotsGame slotsGame = new SlotsGame(slotsPlayers);
-                                        slotsGame.beginGame();
-                                        accountManager.updateAccounts();
-                                    } else {
-                                        noAccountFound(accountPassword, accountName);
-                                        break;
-                                    }
-                                } else {
-                                    HashSet<SlotsPlayer> slotsPlayers = new HashSet<>();
-                                    for (Account account : loggedInAccounts) {
-                                        SlotsPlayer slotsPlayer = new SlotsPlayer(account);
-                                        slotsPlayers.add(slotsPlayer);
-                                    }
-                                    SlotsGame slotsGame = new SlotsGame(slotsPlayers);
-                                    slotsGame.beginGame();
-                                    accountManager.updateAccounts();
-                                }
-                                break;
-                            }
-                            case "THREE CARD POKER":
-                            case "2":
-                                HashSet<ThreeCardPokerPlayer> threeCardPlayers = new HashSet<>();
-
-                                while (true) {
-                                    while (loggedInAccounts.size() == 0 || loginMore) {
-                                        String accountName = console.getStringInput("Enter your account name:");
-                                        String accountPassword = console.getStringInput("Enter your account password:");
-                                        Account account = accountManager.getAccount(accountName, accountPassword);
-
-                                        if (account != null) {
-                                            loggedInAccounts.add(account);
-                                            loginMore = false;
-                                        } else {
-                                            noAccountFound(accountPassword, accountName);
-                                            break;
-                                        }
-                                    }
-
-                                    int loginMoreOrPlay = console.getIntegerInput(
-                                            "(1) Login another user  (2) Begin Play  (3) Return to Main Lobby");
-                                    if (loginMoreOrPlay == 2) {
-                                        for (Account account : loggedInAccounts) {
-                                            ThreeCardPokerPlayer threeCardPokerPlayer = new ThreeCardPokerPlayer(account);
-                                            threeCardPlayers.add(threeCardPokerPlayer);
-                                        }
-                                        ThreeCardPokerGame threeCardPokerGame = new ThreeCardPokerGame(threeCardPlayers);
-                                        threeCardPokerGame.beginGame();
-                                        accountManager.updateAccounts();
-                                        break;
-                                    } else if (loginMoreOrPlay == 3) {
-                                        break;
-                                    } else if (loginMoreOrPlay == 1) {
-                                        loginMore = true;
-                                    }
-                                }
-
-                                break;
-                            case "HIGH LOW DICE":
-                            case "3":
-                                HashSet<HighLowDicePlayer> dicePlayers = new HashSet<>();
-
-                                while (true) {
-                                    while (loggedInAccounts.size() == 0 || loginMore) {
-                                        String accountName = console.getStringInput("Enter your account name:");
-                                        String accountPassword = console.getStringInput("Enter your account password:");
-                                        Account account = accountManager.getAccount(accountName, accountPassword);
-
-                                        if (account != null) {
-                                            loggedInAccounts.add(account);
-                                            loginMore = false;
-                                        } else {
-                                            noAccountFound(accountPassword, accountName);
-                                            break;
-                                        }
-                                    }
-
-                                    int loginMoreOrPlay = console.getIntegerInput(
-                                            "(1) Login another user  (2) Begin Play  (3) Return to Main Lobby");
-                                    if (loginMoreOrPlay == 2) {
-                                        for (Account account : loggedInAccounts) {
-                                            HighLowDicePlayer dicePlayer = new HighLowDicePlayer(account);
-                                            dicePlayers.add(dicePlayer);
-                                        }
-                                        HighLowDice diceGame = new HighLowDice(dicePlayers);
-                                        diceGame.beginGame();
-                                        accountManager.updateAccounts();
-                                        break;
-                                    } else if (loginMoreOrPlay == 3) {
-                                        break;
-                                    } else if (loginMoreOrPlay == 1) {
-                                        loginMore = true;
-                                    }
-                                }
-                                break;
-                            case "TIC TAC TOE":
-                            case "4":
-                            {
-                                if (loggedInAccounts.size() > 1) {
-                                    System.out.println("Too many accounts returning to lobby..");
-                                    // TODO add sleep here?
-                                } else if (loggedInAccounts.size() == 0) {
-                                    String accountName = console.getStringInput("Enter your account name:");
-                                    String accountPassword = console.getStringInput("Enter your account password:");
-                                    Account account = accountManager.getAccount(accountName, accountPassword);
-                                    if (account != null) {
-                                        loggedInAccounts.add(account);
-                                        HashSet<TicTacToePlayer> ticTacToePlayers = new HashSet<>();
-                                        TicTacToePlayer ticTacToePlayer = new TicTacToePlayer(account);
-                                        ticTacToePlayers.add(ticTacToePlayer);
-                                        TicTacToe ticTacToe = new TicTacToe(ticTacToePlayers);
-                                        ticTacToe.beginGame();
-                                        accountManager.updateAccounts();
-                                    } else {
-                                        noAccountFound(accountPassword, accountName);
-                                        break;
-                                    }
-                                } else {
-                                    HashSet<TicTacToePlayer> ticTacToePlayers = new HashSet<>();
-                                    for (Account account : loggedInAccounts) {
-                                        TicTacToePlayer ticTacToePlayer = new TicTacToePlayer(account);
-                                        ticTacToePlayers.add(ticTacToePlayer);
-                                    }
-                                    TicTacToe ticTacToe = new TicTacToe(ticTacToePlayers);
-                                    ticTacToe.beginGame();
-                                    accountManager.updateAccounts();
-                                }
-                                break;
-                            }
-//                       else if (gameSelectionInput.equals("BLACK JACK")) {
-//                           play(new BlackJackGame(), new BlackJackPlayer());
-//                       } else if (gameSelectionInput.equals("ROULETTE")){
-//                           play (new RouletteGame(), new RoulettePlayer());
-//                       }
-                            default:
-                                String errorMessage = "[ %s ] is an invalid game selection";
-                                throw new RuntimeException(String.format(errorMessage, gameSelectionInput));
-                        }
-                        printVenetianBanner();
-                        break;
-                    case "LOGOUT ACCOUNT":
-                    case "4":
-                    case "LOGOUT":
-                    case "L":
-                        if (loggedInAccounts.size() == 1) {
-                            loggedInAccounts.clear();
-                        } else if (loggedInAccounts.size() > 1) {
-                            String usernameToLogout = console.getStringInput("Username to logout:");
-                            String passwordToLogout = console.getStringInput("Password to logout:");
-                            loggedInAccounts.remove(accountManager.getAccount(usernameToLogout, passwordToLogout));
+            switch (dashBoardInput) {
+                case "CREATE ACCOUNT":
+                case "1":
+                case "CREATE":
+                case "C": {
+                    do {
+                        console.println("Welcome to the account-creation screen.");
+                        String accountName = console.getStringInput("Enter your account name:");
+                        String accountPassword = console.getStringInput("Enter your account password:");
+                        if (accountManager.getAccountUsernames().contains(accountName)) {
+                            console.println("This username already exists.");
+                            break;
                         } else {
-                            System.out.println("No one is logged in.");
-                            // TODO add sleep here?
+                            accountManager.createAccount(accountName, accountPassword);
+                            accountManager.updateAccounts();
+                            break;
                         }
-                        break;
+                    } while(true);
+                    break;
                 }
-            } while (!"QUIT".equalsIgnoreCase(dashBoardInput) && !"5".equals(dashBoardInput));
-        } catch (RuntimeException e) {
-            console.println(e.getMessage());
-        }
+                case "SELECT GAME":
+                case "2":
+                    String gameSelectionInput = getGameSelectionInput().toUpperCase();
+                    boolean loginMore = false;
+                    switch (gameSelectionInput) {
+                        case "SLOTS":
+                        case "1":
+                        {
+                            if (loggedInAccounts.size() > 1) System.out.println("Too many accounts returning to lobby...");
+                            else {
+                                Account account = null;
+                                if (loggedInAccounts.size() == 0) {
+                                    account = loginPrompt(accountManager);
+                                    if (account == null) noAccountFound();
+                                } else { // has to be one account logged in already
+                                    for (Account loggedAccount : loggedInAccounts) account = loggedAccount;
+                                }
+                                if (account != null) {
+                                    loggedInAccounts.add(account);
+                                    new SlotsGame(new HashSet<>(Collections.singleton(new SlotsPlayer(account))));
+                                    accountManager.updateAccounts();
+                                }
+                            }
+                            break;
+                        }
+
+                        case "THREE CARD POKER":
+                        case "2":
+                            while (true) {
+                                while (loggedInAccounts.size() == 0 || loginMore) {
+                                    Account account = loginPrompt(accountManager);
+                                    if (account != null) {
+                                        loggedInAccounts.add(account);
+                                        loginMore = false;
+                                    } else {
+                                        noAccountFound();
+                                        break;
+                                    }
+                                }
+                                int loginMoreOrPlay = console.getIntegerInput(
+                                        "(1) Login another user  (2) Begin Play  (3) Return to Main Lobby");
+                                if (loginMoreOrPlay == 2) {
+                                    HashSet<ThreeCardPokerPlayer> threeCardPlayers = new HashSet<>();
+                                    for (Account account : loggedInAccounts) {
+                                        threeCardPlayers.add(new ThreeCardPokerPlayer(account));
+                                    }
+                                    new ThreeCardPokerGame(threeCardPlayers).beginGame();
+                                    accountManager.updateAccounts();
+                                    break;
+                                } else if (loginMoreOrPlay == 3) { break; }
+                                else if (loginMoreOrPlay == 1) { loginMore = true; }
+                            }
+                            break;
+
+                        case "HIGH LOW DICE":
+                        case "3":
+                            while (true) {
+                                while (loggedInAccounts.size() == 0 || loginMore) {
+                                    Account account = loginPrompt(accountManager);
+                                    if (account != null) {
+                                        loggedInAccounts.add(account);
+                                        loginMore = false;
+                                    } else {
+                                        noAccountFound();
+                                        break;
+                                    }
+                                }
+                                int loginMoreOrPlay = console.getIntegerInput(
+                                        "(1) Login another user  (2) Begin Play  (3) Return to Main Lobby");
+                                if (loginMoreOrPlay == 2) {
+                                    HashSet<HighLowDicePlayer> dicePlayers = new HashSet<>();
+                                    for (Account account : loggedInAccounts) {
+                                        dicePlayers.add(new HighLowDicePlayer(account));
+                                    }
+                                    new HighLowDice(dicePlayers).beginGame();
+                                    accountManager.updateAccounts();
+                                    break;
+                                } else if (loginMoreOrPlay == 3) { break; }
+                                else if (loginMoreOrPlay == 1) { loginMore = true; }
+                            }
+                            break;
+
+                        case "TIC TAC TOE":
+                        case "4":
+                        {
+                            if (loggedInAccounts.size() > 1) System.out.println("Too many accounts returning to lobby...");
+                            else {
+                                Account account = null;
+                                if (loggedInAccounts.size() == 0) {
+                                    account = loginPrompt(accountManager);
+                                    if (account == null) noAccountFound();
+                                } else { // has to be one account logged in already
+                                    for (Account loggedAccount : loggedInAccounts) account = loggedAccount;
+                                }
+                                if (account != null) {
+                                    loggedInAccounts.add(account);
+                                    new TicTacToe(new HashSet<>(Collections.singleton(new TicTacToePlayer(account)))).beginGame();
+                                    accountManager.updateAccounts();
+                                }
+                            }
+                            break;
+                        }
+
+                        case "ROULETTE":
+                        case "5":
+                        {
+                            if (loggedInAccounts.size() > 1) System.out.println("Too many accounts returning to lobby...");
+                            else {
+                                Account account = null;
+                                if (loggedInAccounts.size() == 0) {
+                                    account = loginPrompt(accountManager);
+                                    if (account == null) noAccountFound();
+                                } else { // has to be one account logged in already
+                                    for (Account loggedAccount : loggedInAccounts) account = loggedAccount;
+                                }
+                                if (account != null) {
+                                    loggedInAccounts.add(account);
+                                    new Roulette(new RoulettePlayer(account)).play(account);
+                                    accountManager.updateAccounts();
+                                }
+                            }
+                            break;
+                        }
+
+                        default:
+                            String errorMessage = "[ %s ] is an invalid game selection";
+                            System.out.format(errorMessage, gameSelectionInput);
+                    }
+                    printVenetianBanner();
+                    break;
+
+                case "LOGOUT ACCOUNT":
+                case "LOGOUT":
+                case "L":
+                case "4":
+                    if (loggedInAccounts.size() == 1) {
+                        loggedInAccounts.clear();
+                    } else if (loggedInAccounts.size() > 1) {
+                        String usernameToLogout = console.getStringInput("Username to logout:");
+                        String passwordToLogout = console.getStringInput("Password to logout:");
+                        loggedInAccounts.remove(accountManager.getAccount(usernameToLogout, passwordToLogout));
+                    } else {
+                        System.out.println("No one is logged in.");
+                        // TODO add sleep here?
+                    }
+                    break;
+            }
+        } while (!"QUIT".equalsIgnoreCase(dashBoardInput) && !"5".equals(dashBoardInput));
     }
     private void printVenetianBanner() {
         console.println("\n\n\n\n\n" +
@@ -239,6 +210,7 @@ public class Casino {
                 "                                                                                                            \n" +
                 "                                                                                                            \n");
     }
+
     private String getDashboardInput() {
         return console.getStringInput(
          "\nSelect an option number:" +
@@ -250,8 +222,13 @@ public class Casino {
                 "\n(1) SLOTS  (2) THREE CARD POKER  (3) HIGH LOW DICE (4) TIC TAC TOE"); // roulette and blackjack to add
     }
 
-    private void noAccountFound(String accountName, String accountPassword) {
-        String errorMessage = "No account found with name of [ %s ] and password of [ %s ]\n";
-        System.out.format(errorMessage, accountName, accountPassword);
+    private Account loginPrompt(AccountManager accountManager) {
+        String accountName = console.getStringInput("Enter your account name:");
+        String accountPassword = console.getStringInput("Enter your account password:");
+        return accountManager.getAccount(accountName, accountPassword);
+    }
+
+    private void noAccountFound() {
+        console.println("No account found with that name and password.\n");
     }
 }
