@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.Set;
 
 public class AccountManager {
 
@@ -31,6 +32,10 @@ public class AccountManager {
             }
         }
         return null;
+    }
+
+    public Set<String> getAccountUsernames() {
+        return accounts.keySet();
     }
 
     public Account createAccount(String username, String password) {
