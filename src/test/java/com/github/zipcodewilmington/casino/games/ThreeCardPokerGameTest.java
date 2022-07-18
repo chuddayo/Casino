@@ -3,6 +3,10 @@ package com.github.zipcodewilmington.casino.games;
 import com.github.zipcodewilmington.casino.*;
 import com.github.zipcodewilmington.casino.games.cardgames.ThreeCardPokerGame;
 import com.github.zipcodewilmington.casino.games.cardgames.ThreeCardPokerPlayer;
+import com.github.zipcodewilmington.casino.games.cardutils.Card;
+import com.github.zipcodewilmington.casino.games.cardutils.CardValue;
+import com.github.zipcodewilmington.casino.games.cardutils.HandRank;
+import com.github.zipcodewilmington.casino.games.cardutils.Suit;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -126,6 +130,30 @@ public class ThreeCardPokerGameTest {
 
         newGame.sortHand(hand);
         Assert.assertEquals(expectedHand, hand);
+    }
+    @Test
+    public void sortAceTwoThreeStraightTest() {
+        List<Card> hand = new ArrayList<>();
+        Card card1 = new Card(two, diamonds);
+        Card card2 = new Card(ace, spades);
+        Card card3 = new Card(three, clubs);
+        hand.add(card1);
+        hand.add(card2);
+        hand.add(card3);
+
+
+        List<Card> expectedHand = new ArrayList<>();
+        expectedHand.add(card2);
+        expectedHand.add(card1);
+        expectedHand.add(card3);
+
+        playerSet.add(player1);
+        playerSet.add(player2);
+        newGame = new ThreeCardPokerGame(playerSet);
+
+        newGame.sortHand(hand);
+        List<Card> actualHand = newGame.sortAceTwoThreeStraight(hand);
+        Assert.assertEquals(expectedHand, actualHand);
     }
     @Test
     public void discardHandTest1() {

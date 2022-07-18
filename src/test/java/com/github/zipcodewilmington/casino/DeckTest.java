@@ -1,5 +1,7 @@
 package com.github.zipcodewilmington.casino;
 
+import com.github.zipcodewilmington.casino.games.cardutils.Card;
+import com.github.zipcodewilmington.casino.games.cardutils.Deck;
 import org.junit.Assert;
 import org.junit.Test;
 

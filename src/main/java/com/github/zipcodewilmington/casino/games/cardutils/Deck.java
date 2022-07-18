@@ -1,4 +1,4 @@
-package com.github.zipcodewilmington.casino;
+package com.github.zipcodewilmington.casino.games.cardutils;
 
 import java.util.Collections;
 import java.util.Stack;
