@@ -1,8 +1,6 @@
 package com.github.zipcodewilmington.casino.games.cardgames;
 
 import com.github.zipcodewilmington.casino.*;
-import com.github.zipcodewilmington.casino.games.cardgames.ThreeCardPokerGame;
-import com.github.zipcodewilmington.casino.games.cardgames.ThreeCardPokerPlayer;
 import com.github.zipcodewilmington.casino.games.cardutils.Card;
 import com.github.zipcodewilmington.casino.games.cardutils.CardValue;
 import com.github.zipcodewilmington.casino.games.cardutils.HandRank;
