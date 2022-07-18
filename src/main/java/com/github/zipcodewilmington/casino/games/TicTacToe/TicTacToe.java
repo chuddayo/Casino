@@ -22,24 +22,31 @@ public class TicTacToe implements GameInterface {
     @Override
     public void beginGame() {
 
-        String[][] demo = {{"1", "2", "3"}, {"4", "5", "6"}, {"7", "8", "9"}};
-
-        String[][] userInterface = {{" ", " ", " "}, {" ", " ", " "}, {" ", " ", " "}};
-
-        displayUI(demo);
-
         while (true) {
-            userPlay(userInterface);
-            if (isRoundComplete(userInterface)){
-                break;
-            }
-            displayUI(userInterface);
+            String[][] demo = {{"1", "2", "3"}, {"4", "5", "6"}, {"7", "8", "9"}};
 
-            computerPlay(userInterface);
-            if (isRoundComplete(userInterface)){
+            String[][] userInterface = {{" ", " ", " "}, {" ", " ", " "}, {" ", " ", " "}};
+
+            displayUI(demo);
+
+            while (true) { // gameplay loop
+                userPlay(userInterface);
+                if (isRoundComplete(userInterface)) {
+                    break;
+                }
+                displayUI(userInterface);
+
+                computerPlay(userInterface);
+                if (isRoundComplete(userInterface)) {
+                    break;
+                }
+                displayUI(userInterface);
+            }
+            // prompt user to play again?
+            Integer playAgainInput = console.getIntegerInput("(1) Play Again (2) Quit");
+            if (playAgainInput == 2) {
                 break;
             }
-            displayUI(userInterface);
         }
 
     }
