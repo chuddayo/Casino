@@ -10,6 +10,7 @@ public class ThreeCardPokerPlayer extends Player implements GamblingPlayer{
     private List<Card> playerHand;
     private HandRank playerHandRank;
     private Integer ante;
+    private Integer pairPlusBet;
 
     public ThreeCardPokerPlayer(Account account) {
         super(account);
@@ -48,5 +49,13 @@ public class ThreeCardPokerPlayer extends Player implements GamblingPlayer{
     @Override
     public void placeBet(int amount) {
         ante = amount;
+    }
+
+    public Integer getPairPlusBet() {
+        return pairPlusBet;
+    }
+
+    public void setPairPlusBet(Integer pairPlusBet) {
+        this.pairPlusBet = pairPlusBet;
     }
 }

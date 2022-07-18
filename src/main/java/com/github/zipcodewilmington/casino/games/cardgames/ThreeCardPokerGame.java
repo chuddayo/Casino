@@ -31,11 +31,12 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
                 System.out.println("Too many players, returning to lobby."); // TODO sleep here?
                 break;
             }
-
+            // TODO betting amounts limit based on balance
             // *************************
-            //           ANTE
+            //     ANTE & PAIR PLUS
             // *************************
             HashSet<ThreeCardPokerPlayer> removePlayers = new HashSet<>();
+            HashSet<ThreeCardPokerPlayer> pairPlusPlayers = new HashSet<>();
             for (ThreeCardPokerPlayer player : playerSet) {
                 int playerInput;
                 do {
@@ -45,7 +46,16 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
                         int ante = console.getIntegerInput("\nHow many tokens would you like to ante?");
                         player.placeBet(ante);
                         player.getPlayerAccount().deductBalance(ante);
-                        // TODO add Pair Plus bet
+
+                        String input = console.getStringInput("Would you like to place a Pair Plus bet?\n" +
+                                "(1) Yes  (2) No");
+                        if (input.equals("1") || input.equalsIgnoreCase("YES") || input.equalsIgnoreCase("Y")) {
+                            // Pair Plus betting
+                            int pairPlusInput = console.getIntegerInput("How many tokens to bet on Pair Plus?");
+                            player.setPairPlusBet(pairPlusInput);
+                            player.getPlayerAccount().deductBalance(pairPlusInput);
+                            pairPlusPlayers.add(player);
+                        }
                     } else if (playerInput == 2) {
                         removePlayers.add(player);
                     }
@@ -104,14 +114,29 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
                         payout(winner.getAccount(), winner.getAnte() * 4);
                     }
                 } else { // dealer's hand does not qualify
-                    // announce dealer's hand does not qualify
                     System.out.println("The dealer's hand does not qualify.");
                     // payout 3 * ante for all showdown players
                     for (ThreeCardPokerPlayer winner : showdownPlayers) {
                         payout(winner.getAccount(), winner.getAnte() * 3);
                     }
                 }
-                // TODO payout pair plus bets
+                // Payout Pair Plus Bets
+                for (ThreeCardPokerPlayer pairPlusPlayer : pairPlusPlayers) {
+                    if (pairPlusPlayer.getPlayerHandRank().compareTo(HandRank.HIGHCARD) > 0) {
+                        System.out.println(pairPlusPlayer.getPlayerName() + " has a " + pairPlusPlayer.getPlayerHandRank() + " and the Pair Plus bet pays out.");
+                        if (pairPlusPlayer.getPlayerHandRank().equals(HandRank.ONEPAIR)) {
+                            payout(pairPlusPlayer.getAccount(), pairPlusPlayer.getPairPlusBet() * 2);
+                        } else if (pairPlusPlayer.getPlayerHandRank().equals(HandRank.FLUSH)) {
+                            payout(pairPlusPlayer.getAccount(), pairPlusPlayer.getPairPlusBet() * 4);
+                        } else if (pairPlusPlayer.getPlayerHandRank().equals(HandRank.STRAIGHT)) {
+                            payout(pairPlusPlayer.getAccount(), pairPlusPlayer.getPairPlusBet() * 7);
+                        } else if (pairPlusPlayer.getPlayerHandRank().equals(HandRank.THREEOFAKIND)) {
+                            payout(pairPlusPlayer.getAccount(), pairPlusPlayer.getPairPlusBet() * 31);
+                        } else if (pairPlusPlayer.getPlayerHandRank().equals(HandRank.STRAIGHTFLUSH)) {
+                            payout(pairPlusPlayer.getAccount(), pairPlusPlayer.getPairPlusBet() * 41);
+                        }
+                    }
+                }
             } else {
                 System.out.println("\nAll players folded and conceded their ante bets.\n");
             }
@@ -254,7 +279,7 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
         hand.sort(byCardValue);
     }
 
-    public List<Card> sortAceTwoThreeStraight(List<Card> hand) { // TODO write tests
+    public List<Card> sortAceTwoThreeStraight(List<Card> hand) {
         // assuming hand currently 2 3 A
         List<Card> threeHighStraight = new ArrayList<>();
         threeHighStraight.add(hand.get(2));
