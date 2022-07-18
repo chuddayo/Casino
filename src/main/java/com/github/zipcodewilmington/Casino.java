@@ -19,6 +19,7 @@ import com.github.zipcodewilmington.utils.Sleep;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.concurrent.TimeUnit;
 
 public class Casino {
     private final IOConsole console = new IOConsole(AnsiColor.CYAN);
@@ -27,30 +28,33 @@ public class Casino {
         String dashBoardInput;
         AccountManager accountManager = new AccountManager();
         HashSet<Account> loggedInAccounts = new HashSet<>();
+        console.print("\n\n\n\n\n");
         printVenetianBanner();
         do {
             dashBoardInput = getDashboardInput().toUpperCase();
 
             switch (dashBoardInput) {
+
                 case "CREATE ACCOUNT":
                 case "1":
                 case "CREATE":
                 case "C": {
-                    do {
-                        console.println("Welcome to the account-creation screen.");
-                        String accountName = console.getStringInput("Enter your account name:");
-                        String accountPassword = console.getStringInput("Enter your account password:");
-                        if (accountManager.getAccountUsernames().contains(accountName)) {
-                            console.println("This username already exists.");
-                            break;
-                        } else {
-                            accountManager.createAccount(accountName, accountPassword);
-                            accountManager.updateAccounts();
-                            break;
+                    console.println("Welcome to the account-creation screen.");
+                    String accountName = console.getStringInput("Enter your account name:");
+                    String accountPassword = console.getStringInput("Enter your account password:");
+                    if (accountManager.getAccountUsernames().contains(accountName)) {
+                        System.out.print("This username already exists");
+                        for (int i = 0; i < 4; i++) {
+                            Sleep.sleep(500);
+                            console.print(".");
                         }
-                    } while(true);
+                    } else {
+                        accountManager.createAccount(accountName, accountPassword);
+                        accountManager.updateAccounts();
+                    }
                     break;
                 }
+
                 case "SELECT GAME":
                 case "2":
                     String gameSelectionInput = getGameSelectionInput().toUpperCase();
@@ -154,20 +158,10 @@ public class Casino {
                         }
                     }
                     break;
+
+                // TODO Cashier
             }
         } while (!"QUIT".equalsIgnoreCase(dashBoardInput) && !"5".equals(dashBoardInput));
-    }
-    private void printVenetianBanner() {
-        console.println("\n\n\n\n\n" +
-                "oooooo     oooo oooooooooooo ooooo      ooo oooooooooooo ooooooooooooo ooooo       .o.       ooooo      ooo \n" +
-                " `888.     .8'  `888'     `8 `888b.     `8' `888'     `8 8'   888   `8 `888'      .888.      `888b.     `8' \n" +
-                "  `888.   .8'    888          8 `88b.    8   888              888       888      .8 888.      8 `88b.    8  \n" +
-                "   `888. .8'     888oooo8     8   `88b.  8   888oooo8         888       888     .8' `888.     8   `88b.  8  \n" +
-                "    `888.8'      888          8     `88b.8   888              888       888    .88ooo8888.    8     `88b.8  \n" +
-                "     `888'       888       o  8       `888   888       o      888       888   .8'     `888.   8       `888  \n" +
-                "      `8'       o888ooooood8 o8o        `8  o888ooooood8     o888o     o888o o88o     o8888o o8o        `8  \n" +
-                "                                                                                                            \n" +
-                "                                                                                                            \n");
     }
 
     private String getDashboardInput() {
@@ -178,7 +172,7 @@ public class Casino {
 
     private String getGameSelectionInput() {
         return console.getStringInput("From here, you can select any of the following games:" +
-                "\n(1) SLOTS  (2) THREE CARD POKER  (3) HIGH LOW DICE (4) TIC TAC TOE"); // roulette and blackjack to add
+                "\n(1) SLOTS  (2) THREE CARD POKER  (3) HIGH LOW DICE  (4) TIC TAC TOE  (5) ROULETTE");
     }
 
     private Account loginPrompt(AccountManager accountManager) {
@@ -189,5 +183,28 @@ public class Casino {
 
     private void noAccountFound() {
         console.println("No account found with that name and password.\n");
+    }
+
+    public void printSleepyBannerLineByLine(String message, int milliseconds) {
+        String[] stringArray = message.split("\n");
+        int len = stringArray.length;
+        for (int i = 0; i < len; i++) {
+            Sleep.sleep(milliseconds);
+            console.print(stringArray[i]);
+            if (i < len - 1) console.print("\n");
+        }
+    }
+
+    private void printVenetianBanner() {
+        printSleepyBannerLineByLine(
+                "oooooo     oooo oooooooooooo ooooo      ooo oooooooooooo ooooooooooooo ooooo       .o.       ooooo      ooo \n" +
+                        " `888.     .8'  `888'     `8 `888b.     `8' `888'     `8 8'   888   `8 `888'      .888.      `888b.     `8' \n" +
+                        "  `888.   .8'    888          8 `88b.    8   888              888       888      .8 888.      8 `88b.    8  \n" +
+                        "   `888. .8'     888oooo8     8   `88b.  8   888oooo8         888       888     .8' `888.     8   `88b.  8  \n" +
+                        "    `888.8'      888          8     `88b.8   888              888       888    .88ooo8888.    8     `88b.8  \n" +
+                        "     `888'       888       o  8       `888   888       o      888       888   .8'     `888.   8       `888  \n" +
+                        "      `8'       o888ooooood8 o8o        `8  o888ooooood8     o888o     o888o o88o     o8888o o8o        `8  \n" +
+                        "                                                                                                            \n" +
+                        "                                                                                                            \n", 225);
     }
 }

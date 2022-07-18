@@ -1,4 +1,4 @@
-package com.github.zipcodewilmington.casino.games;
+package com.github.zipcodewilmington.casino.games.cardgames;
 
 import com.github.zipcodewilmington.casino.*;
 import com.github.zipcodewilmington.casino.games.cardgames.ThreeCardPokerGame;
