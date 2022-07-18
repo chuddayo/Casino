@@ -154,26 +154,26 @@ public class Casino {
                         cashierInput = console.getStringInput("(1) CHECK BALANCE  (2) ADD BALANCE  (3) WITHDRAW BALANCE  (4) BACK TO LOBBY");
                         if (cashierInput.equalsIgnoreCase("CHECK BALANCE") ||
                                 cashierInput.equals("1")) {
-                            console.println("Your balance is " + cashierAccount.getBalance() + ".");
+                            console.println("Your balance is " + cashierAccount.getBalance() + " tokens.");
                         } else if (cashierInput.equalsIgnoreCase("ADD BALANCE") ||
                                 cashierInput.equals("2")) {
-                            Integer balanceToAdd = console.getIntegerInput("How much are you depositing?");
+                            Integer balanceToAdd = console.getIntegerInput("How many tokens would you like to deposit?");
                             if (balanceToAdd > 0) {
                                 cashierAccount.addBalance(balanceToAdd);
-                                console.println(balanceToAdd + " has been deposited.\n" +
-                                        "You now have " + cashierAccount.getBalance() + ".");
+                                console.println(balanceToAdd + " tokens have been deposited.\n" +
+                                        "You now have " + cashierAccount.getBalance() + " tokens.");
                             } else {
-                                console.println("Please enter a positive integer amount for depositing.");
+                                console.println("Please enter a positive amount of tokens to deposit.");
                             }
                         } else if (cashierInput.equalsIgnoreCase("WITHDRAW BALANCE") ||
                                 cashierInput.equals("3")) {
-                            Integer balanceToWithdraw = console.getIntegerInput("How much are you withdrawing?");
+                            Integer balanceToWithdraw = console.getIntegerInput("How many tokens would you like to withdraw?");
                             if (balanceToWithdraw <= cashierAccount.getBalance()) {
                                 cashierAccount.deductBalance(balanceToWithdraw);
-                                console.println(balanceToWithdraw + " has been withdrawn.\n" +
-                                        "You now have " + cashierAccount.getBalance() + ".");
+                                console.println(balanceToWithdraw + " tokens have been withdrawn.\n" +
+                                        "You now have " + cashierAccount.getBalance() + " tokens.");
                             } else {
-                                console.println("You do not have that much in your account to withdraw.");
+                                console.println("You do not have that many tokens in your account to withdraw...");
                             }
                         } else {
                             break;
