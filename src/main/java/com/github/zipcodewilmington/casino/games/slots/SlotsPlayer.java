@@ -4,9 +4,6 @@ import com.github.zipcodewilmington.casino.Account;
 import com.github.zipcodewilmington.casino.GamblingPlayer;
 import com.github.zipcodewilmington.casino.Player;
 
-/**
- * Created by leon on 7/21/2020.
- */
 public class SlotsPlayer extends Player implements GamblingPlayer {
 
 

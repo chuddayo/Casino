@@ -6,35 +6,25 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Scanner;
 
-/**
- * Created by leon on 7/21/2020.
- */
 public class SlotsGame implements GameInterface {
 
     private SlotsPlayer slotPlayer = null;
-
-    int iTokens = 150;
     int input;
     int iSlot1, iSlot2, iSlot3;
 
     @Override
     public void beginGame() {
         while(true) {
-
             beginningMessage();
-           if (userInput()==2) break;
+            if (userInput() == 2) break;
             spinSlot();
-        }
+            }
     }
     public SlotsGame(HashSet<SlotsPlayer> SlotPlayer) {
         for (SlotsPlayer slotsPlayer: SlotPlayer) {
             slotPlayer = slotsPlayer;
         }
     }
-
-//    public void SlotsGame(){
-//
-//    }
 
     public void beginningMessage(){
         System.out.println("Slot Machine");
@@ -52,13 +42,13 @@ public class SlotsGame implements GameInterface {
 
 
         if (iSlot1 == iSlot2 && iSlot1 == iSlot3) {
-            System.out.println("You win 10 tokens");
+            System.out.println("You win $10 dollars");
             slotPlayer.getPlayerAccount().addBalance(10);
         } else if (iSlot1 == iSlot2 || iSlot1 == iSlot3 || iSlot2 == iSlot3) {
-            System.out.println("You win 5 tokens");
+            System.out.println("You win $5 dollars");
             slotPlayer.getPlayerAccount().addBalance(5);
         } else {
-            System.out.println("You lost a token");
+            System.out.println("You lost $1 dollar");
             slotPlayer.getPlayerAccount().deductBalance(1);
         }
     }
@@ -67,10 +57,6 @@ public class SlotsGame implements GameInterface {
         Scanner console = new Scanner(System.in);
           input = console.nextInt();
           return input;
-    }
-
-    public void Instructions() {
-
     }
 
     @Override
