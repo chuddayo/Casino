@@ -22,6 +22,7 @@ public class Casino {
         String dashBoardInput;
         AccountManager accountManager = new AccountManager();
         HashSet<Account> loggedInAccounts = new HashSet<>();
+        printVenetianBanner();
         try {
             do {
                dashBoardInput = getDashboardInput().toUpperCase();
@@ -31,11 +32,19 @@ public class Casino {
                     case "1":
                     case "CREATE":
                     case "C": {
-                        console.println("Welcome to the account-creation screen.");
-                        String accountName = console.getStringInput("Enter your account name:");
-                        String accountPassword = console.getStringInput("Enter your account password:");
-                        accountManager.createAccount(accountName, accountPassword);
-                        accountManager.updateAccounts();
+                        do {
+                            console.println("Welcome to the account-creation screen.");
+                            String accountName = console.getStringInput("Enter your account name:");
+                            String accountPassword = console.getStringInput("Enter your account password:");
+                            if (accountManager.getAccountUsernames().contains(accountName)) {
+                                console.println("This username already exists.");
+                                break;
+                            } else {
+                                accountManager.createAccount(accountName, accountPassword);
+                                accountManager.updateAccounts();
+                                break;
+                            }
+                        } while(true);
                         break;
                     }
                     case "SELECT GAME":
@@ -63,6 +72,7 @@ public class Casino {
                                         accountManager.updateAccounts();
                                     } else {
                                         noAccountFound(accountPassword, accountName);
+                                        break;
                                     }
                                 } else {
                                     HashSet<SlotsPlayer> slotsPlayers = new HashSet<>();
@@ -91,6 +101,7 @@ public class Casino {
                                             loginMore = false;
                                         } else {
                                             noAccountFound(accountPassword, accountName);
+                                            break;
                                         }
                                     }
 
@@ -128,6 +139,7 @@ public class Casino {
                                             loginMore = false;
                                         } else {
                                             noAccountFound(accountPassword, accountName);
+                                            break;
                                         }
                                     }
 
@@ -169,6 +181,7 @@ public class Casino {
                                         accountManager.updateAccounts();
                                     } else {
                                         noAccountFound(accountPassword, accountName);
+                                        break;
                                     }
                                 } else {
                                     HashSet<TicTacToePlayer> ticTacToePlayers = new HashSet<>();
@@ -191,10 +204,10 @@ public class Casino {
                                 String errorMessage = "[ %s ] is an invalid game selection";
                                 throw new RuntimeException(String.format(errorMessage, gameSelectionInput));
                         }
-
+                        printVenetianBanner();
                         break;
                     case "LOGOUT ACCOUNT":
-                    case "3":
+                    case "4":
                     case "LOGOUT":
                     case "L":
                         if (loggedInAccounts.size() == 1) {
@@ -209,12 +222,13 @@ public class Casino {
                         }
                         break;
                 }
-           } while (!"QUIT".equals(dashBoardInput));
-       } catch (RuntimeException e){System.out.println(e.getMessage());}
+            } while (!"QUIT".equalsIgnoreCase(dashBoardInput) && !"5".equals(dashBoardInput));
+        } catch (RuntimeException e) {
+            console.println(e.getMessage());
+        }
     }
-
-    private String getDashboardInput() {
-        return console.getStringInput("\n\n\n\n\n" +
+    private void printVenetianBanner() {
+        console.println("\n\n\n\n\n" +
                 "oooooo     oooo oooooooooooo ooooo      ooo oooooooooooo ooooooooooooo ooooo       .o.       ooooo      ooo \n" +
                 " `888.     .8'  `888'     `8 `888b.     `8' `888'     `8 8'   888   `8 `888'      .888.      `888b.     `8' \n" +
                 "  `888.   .8'    888          8 `88b.    8   888              888       888      .8 888.      8 `88b.    8  \n" +
@@ -223,9 +237,12 @@ public class Casino {
                 "     `888'       888       o  8       `888   888       o      888       888   .8'     `888.   8       `888  \n" +
                 "      `8'       o888ooooood8 o8o        `8  o888ooooood8     o888o     o888o o88o     o8888o o8o        `8  \n" +
                 "                                                                                                            \n" +
-                "                                                                                                            \n" +
-                "\nSelect an option number:" +
-                "\n(1) Create Account  (2) Select Game  (3) Logout Account");
+                "                                                                                                            \n");
+    }
+    private String getDashboardInput() {
+        return console.getStringInput(
+         "\nSelect an option number:" +
+                "\n(1) Create New Account  (2) Select Game  (3) Cashier  (4) Logout Account  (5) Quit");
     }
 
     private String getGameSelectionInput() {
@@ -233,8 +250,8 @@ public class Casino {
                 "\n(1) SLOTS  (2) THREE CARD POKER  (3) HIGH LOW DICE (4) TIC TAC TOE"); // roulette and blackjack to add
     }
 
-    private void noAccountFound(String accountPassword, String accountName) {
-        String errorMessage = "No account found with name of [ %s ] and password of [ %s ]";
-        throw new RuntimeException(String.format(errorMessage, accountPassword, accountName));
+    private void noAccountFound(String accountName, String accountPassword) {
+        String errorMessage = "No account found with name of [ %s ] and password of [ %s ]\n";
+        System.out.format(errorMessage, accountName, accountPassword);
     }
 }
