@@ -140,25 +140,6 @@ public class Casino {
                     printVenetianBanner();
                     break;
 
-                case "LOGOUT ACCOUNT":
-                case "LOGOUT":
-                case "L":
-                case "4":
-                    if (loggedInAccounts.size() == 1) {
-                        loggedInAccounts.clear();
-                    } else if (loggedInAccounts.size() > 1) {
-                        String usernameToLogout = console.getStringInput("Username to logout:");
-                        String passwordToLogout = console.getStringInput("Password to logout:");
-                        loggedInAccounts.remove(accountManager.getAccount(usernameToLogout, passwordToLogout));
-                    } else {
-                        System.out.print("No one is logged in");
-                        for (int i = 0; i < 4; i++) {
-                            Sleep.sleep(500);
-                            console.print(".");
-                        }
-                    }
-                    break;
-
                 case "CASHIER":
                 case "3":
 
@@ -202,6 +183,26 @@ public class Casino {
                             cashierInput.equals("2") || cashierInput.equals("3"));
                     accountManager.updateAccounts();
                     break;
+
+                case "LOGOUT ACCOUNT":
+                case "LOGOUT":
+                case "L":
+                case "4":
+                    if (loggedInAccounts.size() == 1) {
+                        loggedInAccounts.clear();
+                    } else if (loggedInAccounts.size() > 1) {
+                        String usernameToLogout = console.getStringInput("Username to logout:");
+                        String passwordToLogout = console.getStringInput("Password to logout:");
+                        loggedInAccounts.remove(accountManager.getAccount(usernameToLogout, passwordToLogout));
+                    } else {
+                        System.out.print("No one is logged in");
+                        for (int i = 0; i < 4; i++) {
+                            Sleep.sleep(500);
+                            console.print(".");
+                        }
+                    }
+                    break;
+
             }
         } while (!"QUIT".equalsIgnoreCase(dashBoardInput) && !"5".equals(dashBoardInput));
     }
