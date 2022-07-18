@@ -1,15 +1,13 @@
 package com.github.zipcodewilmington.casino.games.dicegame;
 
 import com.github.zipcodewilmington.casino.Account;
-import com.github.zipcodewilmington.casino.MultiplayerGamblingGame;
-import com.github.zipcodewilmington.casino.Player;
+import com.github.zipcodewilmington.casino.GamblingGameInterface;
 import com.github.zipcodewilmington.utils.AnsiColor;
-import com.github.zipcodewilmington.utils.IOConsole;
 
 import java.util.HashSet;
 import java.util.Scanner;
 
-public class HighLowDice implements MultiplayerGamblingGame {
+public class HighLowDice implements GamblingGameInterface {
 
     private HashSet<HighLowDicePlayer> players;
     private final Scanner scan = new Scanner(System.in);
@@ -109,10 +107,7 @@ public class HighLowDice implements MultiplayerGamblingGame {
         return -1;
     }
 
-    @Override
-    public HashSet<Player> decideWinner(HashSet<Player> players) {
-        return null;
-    }
+
 
     @Override
     public void payout(Account account, int payoutAmount) {
