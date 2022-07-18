@@ -80,7 +80,7 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
                 // dispay hand
                 player.setPlayerHandRank(determineHandRank(player.getPlayerHand()));
                 System.out.println("\n * * " + player.getPlayerName() + "'s Hand * *");
-                System.out.println(player.getPlayerHand()); // TODO better card display
+                System.out.println(handAsString(player.getPlayerHand()));
                 System.out.println(player.getPlayerHandRank() + "\n");
                 // ask to add play bet or fold
                 String userInput;
@@ -170,17 +170,26 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
     public StringBuilder flipAllCards(HashSet<ThreeCardPokerPlayer> showdownPlayers) {
         StringBuilder allCards = new StringBuilder("\n * * Dealer's Hand * *\n");
         allCards.append(dealerHandRank).append("\n");
-        for(Card card : dealerHand) {
-            allCards.append(card).append("\n");
-        }
+        allCards.append(handAsString(dealerHand));
         for(ThreeCardPokerPlayer player : showdownPlayers) {
-            allCards.append(" * * ").append(player.getPlayerName()).append("'s Hand * *\n");
+            allCards.append("\n * * ").append(player.getPlayerName()).append("'s Hand * *\n");
             allCards.append(player.getPlayerHandRank()).append("\n");
-            for(Card card : player.getPlayerHand()) {
-                allCards.append(card).append("\n");
-            }
+            allCards.append(handAsString(player.getPlayerHand()));
         }
         return allCards;
+    }
+
+    public String handAsString(List<Card> hand) { // TODO write tests?
+        StringBuilder stringHand = new StringBuilder();
+        String[] card1 = hand.get(0).toString().split("\n");
+        String[] card2 = hand.get(1).toString().split("\n");
+        String[] card3 = hand.get(2).toString().split("\n");
+
+        for (int i = 0; i < card1.length; i++) {
+            stringHand.append(card1[i]).append(card2[i]).append(card3[i]).append("\n");
+        }
+
+        return String.valueOf(stringHand);
     }
 
     public HashSet<ThreeCardPokerPlayer> decideWinners(HashSet<ThreeCardPokerPlayer> potentialWinners) {
@@ -274,11 +283,13 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
         return HandRank.HIGHCARD;
     }
 
+    // sorts a hand generally lowest to highest card value
     public void sortHand(List<Card> hand) {
         Comparator<Card> byCardValue = Card::compareTo;
         hand.sort(byCardValue);
     }
 
+    // puts the ace in 0 index followed by 2 and 3 for straight vs. straight comparison
     public List<Card> sortAceTwoThreeStraight(List<Card> hand) {
         // assuming hand currently 2 3 A
         List<Card> threeHighStraight = new ArrayList<>();
@@ -288,6 +299,7 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
         return threeHighStraight;
     }
 
+    // pushes the pair to index 1 and 2 for priority comparison when deciding winners
     public List<Card> pushOnePairHand(List<Card> hand) {
         List<Card> sortedPairHand = new ArrayList<>();
         if (hand.get(0).getCardValue().compareTo(hand.get(1).getCardValue()) == 0) {
@@ -318,12 +330,6 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
     }
 
     @Override
-    public HashSet<Player> decideWinner(HashSet<Player> players) {
-        // TODO remove from interface?
-        return null;
-    }
-
-    @Override
     public void payout(Account account, int payoutAmount) {
         account.addBalance(payoutAmount);
         System.out.println("Paid " + payoutAmount + " tokens to " + account.getUserName());
@@ -347,5 +353,11 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
 
     public Deck getDeck() {
         return deck;
+    }
+
+    @Override
+    public HashSet<Player> decideWinner(HashSet<Player> players) {
+        // TODO remove from interface?
+        return null;
     }
 }
