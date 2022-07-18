@@ -8,8 +8,9 @@ import com.github.zipcodewilmington.casino.Player;
  */
 public class TicTacToePlayer extends Player {
 
-    String userInput;
-    int attempts;
+    String userPlay;
+    String computerPlay;
+
     String[][] userInterface;
 
     public TicTacToePlayer(Account account) {
