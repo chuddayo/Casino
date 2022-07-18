@@ -1,5 +1,8 @@
-package com.github.zipcodewilmington.casino;
+package com.github.zipcodewilmington.casino.games.cardutils;
 
+import com.github.zipcodewilmington.casino.games.cardutils.Card;
+import com.github.zipcodewilmington.casino.games.cardutils.CardValue;
+import com.github.zipcodewilmington.casino.games.cardutils.Suit;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -21,7 +24,16 @@ public class CardTest {
         Suit spades = Suit.SPADES;
         CardValue nine = CardValue.NINE;
         Card card = new Card(nine, spades);
-        String expected = "NINE of SPADES";
+        String expected =
+                "┌─────────────┐\n" +
+                "│ 9           │\n" +
+                "│             │\n" +
+                "│             │\n" +
+                "│      ♠      │\n" +
+                "│             │\n" +
+                "│             │\n" +
+                "│           9 │\n" +
+                "└─────────────┘\n";
 
         String actual = card.toString();
         Assert.assertEquals(expected, actual);
