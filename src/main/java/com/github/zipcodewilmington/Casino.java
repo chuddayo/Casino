@@ -14,6 +14,8 @@ import com.github.zipcodewilmington.casino.games.slots.SlotsGame;
 import com.github.zipcodewilmington.casino.games.slots.SlotsPlayer;
 import com.github.zipcodewilmington.utils.AnsiColor;
 import com.github.zipcodewilmington.utils.IOConsole;
+import com.github.zipcodewilmington.utils.Sleep;
+
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
@@ -54,55 +56,9 @@ public class Casino {
                     String gameSelectionInput = getGameSelectionInput().toUpperCase();
                     boolean loginMore = false;
                     switch (gameSelectionInput) {
-                        case "SLOTS":
-                        case "1":
-                        {
-                            if (loggedInAccounts.size() > 1) System.out.println("Too many accounts returning to lobby...");
-                            else {
-                                Account account = null;
-                                if (loggedInAccounts.size() == 0) {
-                                    account = loginPrompt(accountManager);
-                                    if (account == null) noAccountFound();
-                                } else { // has to be one account logged in already
-                                    for (Account loggedAccount : loggedInAccounts) account = loggedAccount;
-                                }
-                                if (account != null) {
-                                    loggedInAccounts.add(account);
-                                    new SlotsGame(new HashSet<>(Collections.singleton(new SlotsPlayer(account))));
-                                    accountManager.updateAccounts();
-                                }
-                            }
-                            break;
-                        }
 
                         case "THREE CARD POKER":
                         case "2":
-                            while (true) {
-                                while (loggedInAccounts.size() == 0 || loginMore) {
-                                    Account account = loginPrompt(accountManager);
-                                    if (account != null) {
-                                        loggedInAccounts.add(account);
-                                        loginMore = false;
-                                    } else {
-                                        noAccountFound();
-                                        break;
-                                    }
-                                }
-                                int loginMoreOrPlay = console.getIntegerInput(
-                                        "(1) Login another user  (2) Begin Play  (3) Return to Main Lobby");
-                                if (loginMoreOrPlay == 2) {
-                                    HashSet<ThreeCardPokerPlayer> threeCardPlayers = new HashSet<>();
-                                    for (Account account : loggedInAccounts) {
-                                        threeCardPlayers.add(new ThreeCardPokerPlayer(account));
-                                    }
-                                    new ThreeCardPokerGame(threeCardPlayers).beginGame();
-                                    accountManager.updateAccounts();
-                                    break;
-                                } else if (loginMoreOrPlay == 3) { break; }
-                                else if (loginMoreOrPlay == 1) { loginMore = true; }
-                            }
-                            break;
-
                         case "HIGH LOW DICE":
                         case "3":
                             while (true) {
@@ -119,11 +75,20 @@ public class Casino {
                                 int loginMoreOrPlay = console.getIntegerInput(
                                         "(1) Login another user  (2) Begin Play  (3) Return to Main Lobby");
                                 if (loginMoreOrPlay == 2) {
-                                    HashSet<HighLowDicePlayer> dicePlayers = new HashSet<>();
-                                    for (Account account : loggedInAccounts) {
-                                        dicePlayers.add(new HighLowDicePlayer(account));
+                                    if (gameSelectionInput.equalsIgnoreCase("THREE CARD POKER") ||
+                                    gameSelectionInput.equals("2")) {
+                                        HashSet<ThreeCardPokerPlayer> threeCardPlayers = new HashSet<>();
+                                        for (Account account : loggedInAccounts) {
+                                            threeCardPlayers.add(new ThreeCardPokerPlayer(account));
+                                        }
+                                        new ThreeCardPokerGame(threeCardPlayers).beginGame();
+                                    } else {
+                                        HashSet<HighLowDicePlayer> dicePlayers = new HashSet<>();
+                                        for (Account account : loggedInAccounts) {
+                                            dicePlayers.add(new HighLowDicePlayer(account));
+                                        }
+                                        new HighLowDice(dicePlayers).beginGame();
                                     }
-                                    new HighLowDice(dicePlayers).beginGame();
                                     accountManager.updateAccounts();
                                     break;
                                 } else if (loginMoreOrPlay == 3) { break; }
@@ -133,27 +98,10 @@ public class Casino {
 
                         case "TIC TAC TOE":
                         case "4":
-                        {
-                            if (loggedInAccounts.size() > 1) System.out.println("Too many accounts returning to lobby...");
-                            else {
-                                Account account = null;
-                                if (loggedInAccounts.size() == 0) {
-                                    account = loginPrompt(accountManager);
-                                    if (account == null) noAccountFound();
-                                } else { // has to be one account logged in already
-                                    for (Account loggedAccount : loggedInAccounts) account = loggedAccount;
-                                }
-                                if (account != null) {
-                                    loggedInAccounts.add(account);
-                                    new TicTacToe(new HashSet<>(Collections.singleton(new TicTacToePlayer(account)))).beginGame();
-                                    accountManager.updateAccounts();
-                                }
-                            }
-                            break;
-                        }
-
                         case "ROULETTE":
                         case "5":
+                        case "SLOTS":
+                        case "1":
                         {
                             if (loggedInAccounts.size() > 1) System.out.println("Too many accounts returning to lobby...");
                             else {
@@ -166,7 +114,15 @@ public class Casino {
                                 }
                                 if (account != null) {
                                     loggedInAccounts.add(account);
-                                    new Roulette(new RoulettePlayer(account)).play(account);
+                                    if (gameSelectionInput.equalsIgnoreCase("SLOTS") ||
+                                            gameSelectionInput.equals("1")) {
+                                        new SlotsGame(new HashSet<>(Collections.singleton(new SlotsPlayer(account))));
+                                    } else if (gameSelectionInput.equalsIgnoreCase("TIC TAC TOE") ||
+                                    gameSelectionInput.equals("4")) {
+                                        new TicTacToe(new HashSet<>(Collections.singleton(new TicTacToePlayer(account)))).beginGame();
+                                    } else {
+                                        new Roulette(new RoulettePlayer(account)).play(account);
+                                    }
                                     accountManager.updateAccounts();
                                 }
                             }
@@ -191,8 +147,11 @@ public class Casino {
                         String passwordToLogout = console.getStringInput("Password to logout:");
                         loggedInAccounts.remove(accountManager.getAccount(usernameToLogout, passwordToLogout));
                     } else {
-                        System.out.println("No one is logged in.");
-                        // TODO add sleep here?
+                        System.out.print("No one is logged in");
+                        for (int i = 0; i < 4; i++) {
+                            Sleep.sleep(500);
+                            console.print(".");
+                        }
                     }
                     break;
             }
