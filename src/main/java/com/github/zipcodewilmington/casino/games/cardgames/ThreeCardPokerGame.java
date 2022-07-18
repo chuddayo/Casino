@@ -7,13 +7,15 @@ import com.github.zipcodewilmington.casino.games.cardutils.Deck;
 import com.github.zipcodewilmington.casino.games.cardutils.HandRank;
 import com.github.zipcodewilmington.utils.AnsiColor;
 import com.github.zipcodewilmington.utils.IOConsole;
+import com.github.zipcodewilmington.utils.Sleep;
+
 import java.util.*;
 
-public class ThreeCardPokerGame implements MultiplayerGamblingGame {
+public class ThreeCardPokerGame implements GamblingGameInterface {
     private final AnsiColor color = AnsiColor.YELLOW;
     private final IOConsole console = new IOConsole(color);
-    private Deck deck;
-    private HashSet<ThreeCardPokerPlayer> playerSet;
+    private final Deck deck;
+    private final HashSet<ThreeCardPokerPlayer> playerSet;
     private List<Card> dealerHand;
     private HandRank dealerHandRank;
 
@@ -27,11 +29,24 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
     public void beginGame() {
         System.out.format(color.getColor() + printInstructions());
         while (true) {
+            // **********************************
+            //  MAX PLAYERS & MIN BALANCE CHECKS
+            // **********************************
             if (playerSet.size() > 6) {
-                System.out.println("Too many players, returning to lobby."); // TODO sleep here?
+                printSleepyMessage("Too many players, returning to lobby . . . .", 200);
                 break;
             }
-            // TODO betting amounts limit based on balance
+
+            HashSet<ThreeCardPokerPlayer> brokePlayers = new HashSet<>();
+            for (ThreeCardPokerPlayer player : playerSet) {
+                if (player.getAccount().getBalance() < 2) {
+                    brokePlayers.add(player);
+                    printSleepyMessage(player.getPlayerName() + " does not have a minimum balance. Directing them to the lobby", 200);
+                }
+            }
+            playerSet.removeAll(brokePlayers);
+            if (playerSet.isEmpty()) break; // exit game
+
             // *************************
             //     ANTE & PAIR PLUS
             // *************************
@@ -43,18 +58,39 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
                     System.out.println("\n" + player.getPlayerName() + " has " + player.getAccount().getBalance() + " tokens.");
                     playerInput = console.getIntegerInput(player.getPlayerName() + " : (1) Place Ante  (2) Return to Lobby");
                     if (playerInput == 1) {
-                        int ante = console.getIntegerInput("\nHow many tokens would you like to ante?");
-                        player.placeBet(ante);
-                        player.getPlayerAccount().deductBalance(ante);
-
-                        String input = console.getStringInput("Would you like to place a Pair Plus bet?\n" +
-                                "(1) Yes  (2) No");
-                        if (input.equals("1") || input.equalsIgnoreCase("YES") || input.equalsIgnoreCase("Y")) {
-                            // Pair Plus betting
-                            int pairPlusInput = console.getIntegerInput("How many tokens to bet on Pair Plus?");
-                            player.setPairPlusBet(pairPlusInput);
-                            player.getPlayerAccount().deductBalance(pairPlusInput);
-                            pairPlusPlayers.add(player);
+                        // Ante bet leaves room for an equal sized Play bet
+                        do {
+                            int ante = console.getIntegerInput("\n" + "You have " + player.getAccount().getBalance() + " tokens.\n" +
+                                    "How many tokens would you like to ante?");
+                            if (ante * 2 <= player.getAccount().getBalance()){
+                                player.placeBet(ante);
+                                player.getPlayerAccount().deductBalance(ante);
+                                break;
+                            } else {
+                                printSleepyMessage("You must keep enough tokens behind for an equivalent sized Play bet . . . .", 200);
+                            }
+                        } while(true);
+                        String input;
+                        // leaving room for equal sized Play bet to established ante
+                        if (player.getAccount().getBalance() > player.getAnte()) {
+                            do {
+                                input = console.getStringInput("Would you like to place a Pair Plus bet?\n" +
+                                        "(1) Yes  (2) No");
+                                if (input.equals("1") || input.equalsIgnoreCase("YES") || input.equalsIgnoreCase("Y")) {
+                                    do { // Pair Plus betting
+                                        int pairPlusInput = console.getIntegerInput( "You have " + player.getAccount().getBalance() + " tokens.\n" +
+                                                "How many tokens to bet on Pair Plus?");
+                                        if (pairPlusInput <= player.getAccount().getBalance() - player.getAnte()) {
+                                            player.setPairPlusBet(pairPlusInput);
+                                            player.getPlayerAccount().deductBalance(pairPlusInput);
+                                            pairPlusPlayers.add(player);
+                                            break;
+                                        } else { printSleepyMessage("You must leave enough behind for a play bet . . . .", 200);}
+                                    } while(true);
+                                }
+                            } while (!input.equals("1") && !input.equals("2"));
+                        } else {
+                            printSleepyMessage("You have no remaining balance to place a Pair Plus bet . . . .", 200);
                         }
                     } else if (playerInput == 2) {
                         removePlayers.add(player);
@@ -77,7 +113,7 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
             // *************************
             HashSet<ThreeCardPokerPlayer> showdownPlayers = new HashSet<>();
             for (ThreeCardPokerPlayer player : playerSet) {
-                // dispay hand
+                // display each player hand
                 player.setPlayerHandRank(determineHandRank(player.getPlayerHand()));
                 System.out.println("\n * * " + player.getPlayerName() + "'s Hand * *");
                 System.out.println(handAsString(player.getPlayerHand()));
@@ -100,7 +136,7 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
                 // determine rank of dealer's hand
                 dealerHandRank = determineHandRank(dealerHand);
                 // show all showdown hands
-                System.out.println(flipAllCards(showdownPlayers)); // TODO better card display
+                System.out.println(flipAllCards(showdownPlayers));
 
                 if (HandRank.HIGHCARD.compareTo(dealerHandRank) < 0 ||
                 dealerHand.get(2).getCardValue().compareTo(CardValue.JACK) > 0) {
@@ -179,7 +215,7 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
         return allCards;
     }
 
-    public String handAsString(List<Card> hand) { // TODO write tests?
+    public String handAsString(List<Card> hand) {
         StringBuilder stringHand = new StringBuilder();
         String[] card1 = hand.get(0).toString().split("\n");
         String[] card2 = hand.get(1).toString().split("\n");
@@ -283,7 +319,7 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
         return HandRank.HIGHCARD;
     }
 
-    // sorts a hand generally lowest to highest card value
+    // sorts a hand generally low to high by card value
     public void sortHand(List<Card> hand) {
         Comparator<Card> byCardValue = Card::compareTo;
         hand.sort(byCardValue);
@@ -355,9 +391,12 @@ public class ThreeCardPokerGame implements MultiplayerGamblingGame {
         return deck;
     }
 
-    @Override
-    public HashSet<Player> decideWinner(HashSet<Player> players) {
-        // TODO remove from interface?
-        return null;
+    public void printSleepyMessage(String message, Integer milliseconds) {
+        String[] stringArray = message.split(" ");
+        for (int i = 0; i < stringArray.length; i++) {
+            Sleep.sleep(milliseconds);
+            console.print(stringArray[i]);
+            if (i < stringArray.length - 1) console.print(" ");
+        }
     }
 }
