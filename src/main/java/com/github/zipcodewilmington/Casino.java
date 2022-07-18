@@ -140,6 +140,50 @@ public class Casino {
                     printVenetianBanner();
                     break;
 
+                case "CASHIER":
+                case "3":
+
+                    Account cashierAccount = loginPrompt(accountManager);
+                    if (cashierAccount == null) {
+                        noAccountFound();
+                        break;
+                    }
+
+                    String cashierInput;
+                    do {
+                        cashierInput = console.getStringInput("(1) CHECK BALANCE  (2) ADD BALANCE  (3) WITHDRAW BALANCE  (4) BACK TO LOBBY");
+                        if (cashierInput.equalsIgnoreCase("CHECK BALANCE") ||
+                                cashierInput.equals("1")) {
+                            console.println("Your balance is " + cashierAccount.getBalance() + ".");
+                        } else if (cashierInput.equalsIgnoreCase("ADD BALANCE") ||
+                                cashierInput.equals("2")) {
+                            Integer balanceToAdd = console.getIntegerInput("How much are you depositing?");
+                            if (balanceToAdd > 0) {
+                                cashierAccount.addBalance(balanceToAdd);
+                                console.println(balanceToAdd + " has been deposited.\n" +
+                                        "You now have " + cashierAccount.getBalance() + ".");
+                            } else {
+                                console.println("Please enter a positive integer amount for depositing.");
+                            }
+                        } else if (cashierInput.equalsIgnoreCase("WITHDRAW BALANCE") ||
+                                cashierInput.equals("3")) {
+                            Integer balanceToWithdraw = console.getIntegerInput("How much are you withdrawing?");
+                            if (balanceToWithdraw <= cashierAccount.getBalance()) {
+                                cashierAccount.deductBalance(balanceToWithdraw);
+                                console.println(balanceToWithdraw + " has been withdrawn.\n" +
+                                        "You now have " + cashierAccount.getBalance() + ".");
+                            } else {
+                                console.println("You do not have that much in your account to withdraw.");
+                            }
+                        } else {
+                            break;
+                        }
+                    } while (cashierInput.equalsIgnoreCase("CHECK BALANCE") || cashierInput.equalsIgnoreCase("ADD BALANCE") ||
+                            cashierInput.equalsIgnoreCase("WITHDRAW BALANCE") || cashierInput.equals("1") ||
+                            cashierInput.equals("2") || cashierInput.equals("3"));
+                    accountManager.updateAccounts();
+                    break;
+
                 case "LOGOUT ACCOUNT":
                 case "LOGOUT":
                 case "L":
@@ -159,10 +203,6 @@ public class Casino {
                     }
                     break;
 
-                // TODO Cashier
-//                case "CHECK BALANCE":
-//                case "ADD BALANCE": or wallet ? hmmm...
-//                case "WITHDRAW BALANCE":
             }
         } while (!"QUIT".equalsIgnoreCase(dashBoardInput) && !"5".equals(dashBoardInput));
     }
@@ -200,7 +240,7 @@ public class Casino {
 
     private void printVenetianBanner() {
         printSleepyBannerLineByLine(
-                "oooooo     oooo oooooooooooo ooooo      ooo oooooooooooo ooooooooooooo ooooo       .o.       ooooo      ooo \n" +
+             "\noooooo     oooo oooooooooooo ooooo      ooo oooooooooooo ooooooooooooo ooooo       .o.       ooooo      ooo \n" +
                         " `888.     .8'  `888'     `8 `888b.     `8' `888'     `8 8'   888   `8 `888'      .888.      `888b.     `8' \n" +
                         "  `888.   .8'    888          8 `88b.    8   888              888       888      .8 888.      8 `88b.    8  \n" +
                         "   `888. .8'     888oooo8     8   `88b.  8   888oooo8         888       888     .8' `888.     8   `88b.  8  \n" +
