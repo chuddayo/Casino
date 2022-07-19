@@ -41,7 +41,7 @@ public class HighLowDice implements GamblingGameInterface {
                         player.bet(bet);
                     }
                 }
-                getWinningBet();
+                winningBet();
                 payout();
                 String input = printAndScanStr("This round of game has finished, would you like to play again? (yes or no)");
                 if (input.toLowerCase().equals("no")) break;
@@ -52,7 +52,7 @@ public class HighLowDice implements GamblingGameInterface {
         }
     }
 
-    public void getWinningBet() {
+    public void winningBet() {
         int roll = this.dicePair.tossAndSum();
         print(this.dicePair.getDiceArt() + "\n");
         print("(( The dice roll is: " + roll + "! ))\n");
@@ -60,6 +60,10 @@ public class HighLowDice implements GamblingGameInterface {
         else if (roll > 7) this.winningBet = "high";
         else this.winningBet = "seven";
         print("(( The winning bet is: " + this.winningBet + "! ))\n\n");
+    }
+
+    public String getWinningBet() {
+        return this.winningBet;
     }
 
     public void payout() {
@@ -136,6 +140,10 @@ public class HighLowDice implements GamblingGameInterface {
         return -1;
     }
 
+    public HashSet<HighLowDicePlayer> getPlayers() {
+        return this.players;
+    }
+
     public void checkPlayersBalance() {
         HashSet<HighLowDicePlayer> updatedPlayers = new HashSet<>();
         for (HighLowDicePlayer player : this.players) {
@@ -150,5 +158,6 @@ public class HighLowDice implements GamblingGameInterface {
 
     @Override
     public void payout(Account account, int payoutAmount) {
+        account.setBalance(account.getBalance() + payoutAmount);
     }
 }

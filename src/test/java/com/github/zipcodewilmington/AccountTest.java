@@ -1,50 +1,55 @@
 package com.github.zipcodewilmington;
 
 import com.github.zipcodewilmington.casino.Account;
-import com.github.zipcodewilmington.casino.AccountManager;
-import com.github.zipcodewilmington.casino.games.dicegame.HighLowDicePlayer;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.util.HashSet;
-
 public class AccountTest {
 
-    Account account3;
-    Account account4;
-
-    HighLowDicePlayer player1;
-
-    HighLowDicePlayer player2;
-
-    HashSet<HighLowDicePlayer> playerSet;
+    Account account1 = new Account("linda", "hi", 1000);
 
     @Test
-    public void testSetup() throws IOException { // TODO
-        Account account3;
-        Account account4;
-
-        HighLowDicePlayer player1;
-
-        HighLowDicePlayer player2;
-
-        HashSet<HighLowDicePlayer> playerSet;
+    public void testGetUserName()  {
+        Assert.assertEquals("linda", account1.getUserName());
     }
 
     @Test
-    public void accountManagerTest() throws IOException {
-        AccountManager mgr = new AccountManager();
-        mgr.createAccount("goose", "omgimagoose");
-        mgr.createAccount("duck", "omgimaduck");
-
+    public void testGetPassword() {
+        Assert.assertEquals("hi", account1.getPassword());
     }
 
     @Test
-    public void creatingAccountTest() throws IOException {
-        AccountManager mgr = new AccountManager();
-        mgr.createAccount("goose", "omgimagoose");
-        mgr.createAccount("duck", "omgimaduck");
+    public void testGetBalance() {
+        Assert.assertEquals(1000, account1.getBalance());
     }
 
+    @Test
+    public void testSetBalance() {
+        account1.setBalance(2000);
+        Assert.assertEquals(2000, account1.getBalance());
+    }
+
+    @Test
+    public void testCheckBalance() {
+        // Check the account can place a bet of 1000
+        Assert.assertTrue(account1.checkBalance(1000));
+    }
+
+    @Test
+    public void testCheckBalance2() {
+        // Check the account can place a bet of 10000
+        Assert.assertFalse(account1.checkBalance(10000));
+    }
+
+    @Test
+    public void testAddBalance() {
+        account1.addBalance(1000);
+        Assert.assertEquals(2000, account1.getBalance());
+    }
+
+    @Test
+    public void testDeductBalance() {
+        account1.deductBalance(1000);
+        Assert.assertEquals(0, account1.getBalance());
+    }
 }
