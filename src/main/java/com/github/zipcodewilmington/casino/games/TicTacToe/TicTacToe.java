@@ -53,7 +53,7 @@ public class TicTacToe implements GameInterface {
 public TicTacToe(HashSet< TicTacToePlayer > TicTacToePlayer) {this.players = TicTacToePlayer;}
 
 
-    private boolean isRoundComplete(String[][] userInterface) {
+    public boolean isRoundComplete(String[][] userInterface) {
 
         if (declareWinner(userInterface, "X")) {
 
@@ -81,7 +81,7 @@ public TicTacToe(HashSet< TicTacToePlayer > TicTacToePlayer) {this.players = Tic
     }
 
 
-    private boolean declareWinner(String[][] board, String symbol) {
+    public boolean declareWinner(String[][] board, String symbol) {
         if ((Objects.equals(board[0][0], symbol) && Objects.equals(board[0][1], symbol) && Objects.equals(board[0][2], symbol)) ||
                 (Objects.equals(board[1][0], symbol) && Objects.equals(board[1][1], symbol) && Objects.equals(board[1][2], symbol)) ||
                 (Objects.equals(board[2][0], symbol) && Objects.equals(board[2][1], symbol) && Objects.equals(board[2][2], symbol)) ||
