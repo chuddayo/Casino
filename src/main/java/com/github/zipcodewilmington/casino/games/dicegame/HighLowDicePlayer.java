@@ -14,12 +14,12 @@ public class HighLowDicePlayer extends Player implements GamblingPlayer {
 
     @Override
     public String getPlayerName() {
-        return null;
+        return this.account.getUserName();
     }
 
     @Override
     public Account getPlayerAccount() {
-        return null;
+        return this.account;
     }
 
     @Override
