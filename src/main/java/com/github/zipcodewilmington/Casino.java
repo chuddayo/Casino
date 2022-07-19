@@ -50,7 +50,7 @@ public class Casino {
                             console.print(".");
                         }
                     } else {
-                        accountManager.createAccount(accountName, accountPassword);
+                        accountManager.createAccount(accountName, accountPassword, startingBalance);
                         accountManager.updateAccounts();
                     }
                     break;
