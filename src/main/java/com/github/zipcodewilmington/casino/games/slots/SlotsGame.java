@@ -42,13 +42,13 @@ public class SlotsGame implements GameInterface {
 
 
         if (iSlot1 == iSlot2 && iSlot1 == iSlot3) {
-            System.out.println("You win $10 dollars");
+            System.out.println("You win 10 tokens");
             slotPlayer.getPlayerAccount().addBalance(10);
         } else if (iSlot1 == iSlot2 || iSlot1 == iSlot3 || iSlot2 == iSlot3) {
-            System.out.println("You win $5 dollars");
+            System.out.println("You win 5 tokens");
             slotPlayer.getPlayerAccount().addBalance(5);
         } else {
-            System.out.println("You lost $1 dollar");
+            System.out.println("You lost 1 token");
             slotPlayer.getPlayerAccount().deductBalance(1);
         }
     }
