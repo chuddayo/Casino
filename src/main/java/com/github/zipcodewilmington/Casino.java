@@ -42,6 +42,7 @@ public class Casino {
                     console.println("Welcome to the account-creation screen.");
                     String accountName = console.getStringInput("Enter your account name:");
                     String accountPassword = console.getStringInput("Enter your account password:");
+                    Integer startingBalance = console.getIntegerInput("Enter the amount of tokens would you like to add to your account:");
                     if (accountManager.getAccountUsernames().contains(accountName)) {
                         System.out.print("This username already exists");
                         for (int i = 0; i < 4; i++) {
@@ -120,7 +121,7 @@ public class Casino {
                                     loggedInAccounts.add(account);
                                     if (gameSelectionInput.equalsIgnoreCase("SLOTS") ||
                                             gameSelectionInput.equals("1")) {
-                                        new SlotsGame(new HashSet<>(Collections.singleton(new SlotsPlayer(account))));
+                                        new SlotsGame(new HashSet<>(Collections.singleton(new SlotsPlayer(account)))).beginGame();
                                     } else if (gameSelectionInput.equalsIgnoreCase("TIC TAC TOE") ||
                                     gameSelectionInput.equals("4")) {
                                         new TicTacToe(new HashSet<>(Collections.singleton(new TicTacToePlayer(account)))).beginGame();
