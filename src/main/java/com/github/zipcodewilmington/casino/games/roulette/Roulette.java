@@ -3,7 +3,6 @@ package com.github.zipcodewilmington.casino.games.roulette;
 import com.github.zipcodewilmington.casino.Account;
 import com.github.zipcodewilmington.casino.MultiplayerGamblingGame;
 import com.github.zipcodewilmington.casino.Player;
-import com.github.zipcodewilmington.casino.games.cardgames.ThreeCardPokerPlayer;
 import com.github.zipcodewilmington.casino.games.roulette.typeofbet.OddOrEven;
 import com.github.zipcodewilmington.casino.games.roulette.typeofbet.RedOrBlack;
 import com.github.zipcodewilmington.casino.games.roulette.typeofbet.StreetBet;
@@ -34,6 +33,9 @@ public class Roulette implements MultiplayerGamblingGame {
     }
 
     public void play(Account account) {
+        System.out.print(printInstructions());
+
+
         int amount = IOConsoleReader.promptRange("How much would you like to bet?", 0, account.getBalance());
                                                                                     //will need to get right method
         Bet bet = promptForBet();
@@ -80,7 +82,30 @@ public class Roulette implements MultiplayerGamblingGame {
 
     @Override
     public String printInstructions() {
-        return null;
+        return """ 
+                                                         ============ Welcome to!============
+                                                                                                                                                 \s
+                8 888888888o.      ,o888888o.     8 8888      88 8 8888         8 8888888888 8888888 8888888888 8888888 8888888888 8 8888888888  \s
+                8 8888    `88.  . 8888     `88.   8 8888      88 8 8888         8 8888             8 8888             8 8888       8 8888        \s
+                8 8888     `88 ,8 8888       `8b  8 8888      88 8 8888         8 8888             8 8888             8 8888       8 8888        \s
+                8 8888     ,88 88 8888        `8b 8 8888      88 8 8888         8 8888             8 8888             8 8888       8 8888        \s
+                8 8888.   ,88' 88 8888         88 8 8888      88 8 8888         8 888888888888     8 8888             8 8888       8 888888888888\s
+                8 888888888P'  88 8888         88 8 8888      88 8 8888         8 8888             8 8888             8 8888       8 8888        \s
+                8 8888`8b      88 8888        ,8P 8 8888      88 8 8888         8 8888             8 8888             8 8888       8 8888        \s
+                8 8888 `8b.    `8 8888       ,8P  ` 8888     ,8P 8 8888         8 8888             8 8888             8 8888       8 8888        \s
+                8 8888   `8b.   ` 8888     ,88'     8888   ,d8P  8 8888         8 8888             8 8888             8 8888       8 8888        \s
+                8 8888     `88.    `8888888P'        `Y88888P'   8 888888888888 8 888888888888     8 8888             8 8888       8 888888888888\s
+                                
+                                
+                                
+                                                 ========================== Rules: ==========================
+                                                 1. Under Construction
+                                                 2. Under Construction
+                                                 3. Under Construction
+                                                 4. Under Construction
+                                
+                                
+                """;
     }
 
     @Override
