@@ -1,4 +1,4 @@
-package com.github.zipcodewilmington.casino.DiceTests;
+package com.github.zipcodewilmington.casino.games.slots;
 
 import com.github.zipcodewilmington.Casino;
 import org.junit.Assert;
@@ -6,7 +6,8 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-public class HighLowDiceTest {
+public class SlotsGameTest {
+
 
     @Test
     public void test() throws IOException { // TODO

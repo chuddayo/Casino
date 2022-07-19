@@ -16,43 +16,44 @@ public class TicTacToe implements GameInterface {
 
     @Override
     public String printInstructions() {
-        return null;
+        return "============Welcome to Venetian TIC TAC TOE!============";
     }
 
     @Override
     public void beginGame() {
-        Scanner scanner = new Scanner(System.in);
-
-        String[][] demo = {{"1", "2", "3"}, {"4", "5", "6"}, {"7", "8", "9"}};
-
-        String[][] userInterface = {{" ", " ", " "}, {" ", " ", " "}, {" ", " ", " "}};
-
-        displayUI(demo);
-
+        // practice note
         while (true) {
-            userPlay(userInterface, scanner);
-            if (isRoundComplete(userInterface)){
-                break;
-            }
-            displayUI(userInterface);
+            String[][] demo = {{"1", "2", "3"}, {"4", "5", "6"}, {"7", "8", "9"}};
 
-            computerPlay(userInterface);
-            if (isRoundComplete(userInterface)){
+            String[][] userInterface = {{" ", " ", " "}, {" ", " ", " "}, {" ", " ", " "}};
+
+            displayUI(demo);
+
+            while (true) { // gameplay loop
+                userPlay(userInterface);
+                if (isRoundComplete(userInterface)) {
+                    break;
+                }
+                displayUI(userInterface);
+
+                computerPlay(userInterface);
+                if (isRoundComplete(userInterface)) {
+                    break;
+                }
+                displayUI(userInterface);
+            }
+            // prompt user to play again?
+            Integer playAgainInput = console.getIntegerInput("(1) Play Again (2) Quit");
+            if (playAgainInput == 2) {
                 break;
             }
-            displayUI(userInterface);
         }
-        //scanner.close();
+
     }
 public TicTacToe(HashSet< TicTacToePlayer > TicTacToePlayer) {this.players = TicTacToePlayer;}
 
-//    public static void main(String[] args) {
-//
-//
-//    }
 
-
-    private boolean isRoundComplete(String[][] userInterface) {
+    public boolean isRoundComplete(String[][] userInterface) {
 
         if (declareWinner(userInterface, "X")) {
 
@@ -80,7 +81,7 @@ public TicTacToe(HashSet< TicTacToePlayer > TicTacToePlayer) {this.players = Tic
     }
 
 
-    private boolean declareWinner(String[][] board, String symbol) {
+    public boolean declareWinner(String[][] board, String symbol) {
         if ((Objects.equals(board[0][0], symbol) && Objects.equals(board[0][1], symbol) && Objects.equals(board[0][2], symbol)) ||
                 (Objects.equals(board[1][0], symbol) && Objects.equals(board[1][1], symbol) && Objects.equals(board[1][2], symbol)) ||
                 (Objects.equals(board[2][0], symbol) && Objects.equals(board[2][1], symbol) && Objects.equals(board[2][2], symbol)) ||
@@ -109,10 +110,9 @@ public TicTacToe(HashSet< TicTacToePlayer > TicTacToePlayer) {this.players = Tic
         System.out.println("Computer played " + computerMove);
         playerMove(board, Integer.toString(computerMove), "O");
     }
-    private void userPlay (String[][] userInterface, Scanner scanner) {
+    private void userPlay (String[][] userInterface) {
         String userInput;
         while (true) {
-            //System.out.println("Where would you like to play? (1-9)");
             userInput = console.getStringInput("Where would you like to play? (1-9)");
             if (isValidPlay(userInterface, userInput)){
                 break;

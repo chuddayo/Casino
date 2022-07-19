@@ -1,17 +1,14 @@
 package com.github.zipcodewilmington.casino.games.roulette;
 
 import com.github.zipcodewilmington.casino.Account;
-import com.github.zipcodewilmington.casino.MultiplayerGamblingGame;
-import com.github.zipcodewilmington.casino.Player;
+import com.github.zipcodewilmington.casino.GamblingGameInterface;
 import com.github.zipcodewilmington.casino.games.roulette.typeofbet.OddOrEven;
 import com.github.zipcodewilmington.casino.games.roulette.typeofbet.RedOrBlack;
 import com.github.zipcodewilmington.casino.games.roulette.typeofbet.StreetBet;
 import com.github.zipcodewilmington.casino.games.roulette.utilroulette.IOConsoleReader;
 
-import java.util.HashSet;
 
-
-public class Roulette implements MultiplayerGamblingGame {
+public class Roulette implements GamblingGameInterface {
     private  RoulettePlayer player;
     private final WheelSpin myWheel;
     public Roulette (RoulettePlayer player) {
@@ -127,8 +124,5 @@ public class Roulette implements MultiplayerGamblingGame {
                 """;
     }
 
-    @Override
-    public HashSet<Player> decideWinner(HashSet<Player> players) {
-        return null;
-    }
+
 }

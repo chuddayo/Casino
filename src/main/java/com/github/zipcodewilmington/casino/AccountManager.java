@@ -61,7 +61,7 @@ public class AccountManager {
     }
 
     public void registerAccount(Account account) {
-
+        this.accounts.put(account.getUserName(), account);
     }
 
     public void updateAccounts() throws IOException {

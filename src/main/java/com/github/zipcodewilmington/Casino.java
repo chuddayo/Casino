@@ -42,6 +42,7 @@ public class Casino {
                     console.println("Welcome to the account-creation screen.");
                     String accountName = console.getStringInput("Enter your account name:");
                     String accountPassword = console.getStringInput("Enter your account password:");
+                    Integer startingBalance = console.getIntegerInput("Enter the amount of tokens would you like to add to your account:");
                     if (accountManager.getAccountUsernames().contains(accountName)) {
                         System.out.print("This username already exists");
                         for (int i = 0; i < 4; i++) {
@@ -49,7 +50,7 @@ public class Casino {
                             console.print(".");
                         }
                     } else {
-                        accountManager.createAccount(accountName, accountPassword);
+                        accountManager.createAccount(accountName, accountPassword, startingBalance);
                         accountManager.updateAccounts();
                     }
                     break;
@@ -120,7 +121,7 @@ public class Casino {
                                     loggedInAccounts.add(account);
                                     if (gameSelectionInput.equalsIgnoreCase("SLOTS") ||
                                             gameSelectionInput.equals("1")) {
-                                        new SlotsGame(new HashSet<>(Collections.singleton(new SlotsPlayer(account))));
+                                        new SlotsGame(new HashSet<>(Collections.singleton(new SlotsPlayer(account)))).beginGame();
                                     } else if (gameSelectionInput.equalsIgnoreCase("TIC TAC TOE") ||
                                     gameSelectionInput.equals("4")) {
                                         new TicTacToe(new HashSet<>(Collections.singleton(new TicTacToePlayer(account)))).beginGame();
@@ -138,6 +139,50 @@ public class Casino {
                             System.out.format(errorMessage, gameSelectionInput);
                     }
                     printVenetianBanner();
+                    break;
+
+                case "CASHIER":
+                case "3":
+
+                    Account cashierAccount = loginPrompt(accountManager);
+                    if (cashierAccount == null) {
+                        noAccountFound();
+                        break;
+                    }
+
+                    String cashierInput;
+                    do {
+                        cashierInput = console.getStringInput("(1) CHECK BALANCE  (2) ADD BALANCE  (3) WITHDRAW BALANCE  (4) BACK TO LOBBY");
+                        if (cashierInput.equalsIgnoreCase("CHECK BALANCE") ||
+                                cashierInput.equals("1")) {
+                            console.println("Your balance is " + cashierAccount.getBalance() + " tokens.");
+                        } else if (cashierInput.equalsIgnoreCase("ADD BALANCE") ||
+                                cashierInput.equals("2")) {
+                            Integer balanceToAdd = console.getIntegerInput("How many tokens would you like to deposit?");
+                            if (balanceToAdd > 0) {
+                                cashierAccount.addBalance(balanceToAdd);
+                                console.println(balanceToAdd + " tokens have been deposited.\n" +
+                                        "You now have " + cashierAccount.getBalance() + " tokens.");
+                            } else {
+                                console.println("Please enter a positive amount of tokens to deposit.");
+                            }
+                        } else if (cashierInput.equalsIgnoreCase("WITHDRAW BALANCE") ||
+                                cashierInput.equals("3")) {
+                            Integer balanceToWithdraw = console.getIntegerInput("How many tokens would you like to withdraw?");
+                            if (balanceToWithdraw <= cashierAccount.getBalance()) {
+                                cashierAccount.deductBalance(balanceToWithdraw);
+                                console.println(balanceToWithdraw + " tokens have been withdrawn.\n" +
+                                        "You now have " + cashierAccount.getBalance() + " tokens.");
+                            } else {
+                                console.println("You do not have that many tokens in your account to withdraw...");
+                            }
+                        } else {
+                            break;
+                        }
+                    } while (cashierInput.equalsIgnoreCase("CHECK BALANCE") || cashierInput.equalsIgnoreCase("ADD BALANCE") ||
+                            cashierInput.equalsIgnoreCase("WITHDRAW BALANCE") || cashierInput.equals("1") ||
+                            cashierInput.equals("2") || cashierInput.equals("3"));
+                    accountManager.updateAccounts();
                     break;
 
                 case "LOGOUT ACCOUNT":
@@ -159,7 +204,6 @@ public class Casino {
                     }
                     break;
 
-                // TODO Cashier
             }
         } while (!"QUIT".equalsIgnoreCase(dashBoardInput) && !"5".equals(dashBoardInput));
     }
@@ -197,7 +241,7 @@ public class Casino {
 
     private void printVenetianBanner() {
         printSleepyBannerLineByLine(
-                "oooooo     oooo oooooooooooo ooooo      ooo oooooooooooo ooooooooooooo ooooo       .o.       ooooo      ooo \n" +
+             "\noooooo     oooo oooooooooooo ooooo      ooo oooooooooooo ooooooooooooo ooooo       .o.       ooooo      ooo \n" +
                         " `888.     .8'  `888'     `8 `888b.     `8' `888'     `8 8'   888   `8 `888'      .888.      `888b.     `8' \n" +
                         "  `888.   .8'    888          8 `88b.    8   888              888       888      .8 888.      8 `88b.    8  \n" +
                         "   `888. .8'     888oooo8     8   `88b.  8   888oooo8         888       888     .8' `888.     8   `88b.  8  \n" +
