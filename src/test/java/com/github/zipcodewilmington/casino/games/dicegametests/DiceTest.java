@@ -1,6 +1,7 @@
 package com.github.zipcodewilmington.casino.games.dicegametests;
 
 import com.github.zipcodewilmington.Casino;
+import com.github.zipcodewilmington.casino.games.dicegame.Dice;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -9,23 +10,20 @@ import java.io.IOException;
 public class DiceTest {
 
     @Test
-    public void test() throws IOException { // TODO
-        // given
-        Casino runnable = new Casino();
-
-        // when
-        runnable.run();
-
-        // then
-        Assert.assertNotNull(runnable.toString());
+    public void testDiceEmptyConstructor()
+    {
+        // Construct an Die object
+        Dice die = new Dice();
     }
-//       Dice dice = new Dice();
-//        Random random = new Random(1);
-//        dice.setRandom(random);
-//
-//        Integer expected = 4;
-//        Integer actual = dice.rollDice();
-//
-//        Assert.assertEquals(expected, actual);
-//    }
+
+    @Test
+    public void testDieSidesConstructor()
+    {
+        int sides = 6;
+
+        // Construct an Die object
+        Dice dice = new Dice();
+
+        // Check to see if the die has the expected number of sides
+    }
 }

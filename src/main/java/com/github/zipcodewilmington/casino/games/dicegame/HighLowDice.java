@@ -75,7 +75,6 @@ public class HighLowDice implements GamblingGameInterface {
         }
     }
 
-
     @Override
     public String printInstructions() {
         return  """
