@@ -18,11 +18,11 @@ public class RoulettePlayer extends Player implements GamblingPlayer {
 
     @Override
     public String getPlayerName() {
-        return null;
+        return account.getUserName();
     }
 
     @Override
     public Account getPlayerAccount() {
-        return null;
+        return account;
     }
 }
