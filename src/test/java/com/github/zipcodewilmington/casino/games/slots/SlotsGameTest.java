@@ -1,4 +1,4 @@
-package com.github.zipcodewilmington.casino.games;
+package com.github.zipcodewilmington.casino.games.slots;
 
 import com.github.zipcodewilmington.Casino;
 import org.junit.Assert;
@@ -20,6 +20,5 @@ public class SlotsGameTest {
         // then
         Assert.assertNotNull(runnable.toString());
     }
-
 
 }
